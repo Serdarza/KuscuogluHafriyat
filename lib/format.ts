@@ -145,7 +145,7 @@ export const MACHINES = [
 
 export const VAT_RATES = [0, 1, 10, 20];
 
-export const UNITS = ["m³", "metre", "sefer", "saat", "gün", "adet"];
+export const UNITS = ["saat", "m³", "metre", "sefer", "gün", "adet"];
 
 export function lineAmount(line: InvoiceLine) {
   return roundMoney(line.quantity * line.unitPrice);

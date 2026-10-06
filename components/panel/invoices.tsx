@@ -35,7 +35,7 @@ import { downloadInvoicePdf } from "@/lib/pdf";
 import type { Invoice, InvoiceLine, PaymentStatus, PeriodFilter } from "@/lib/types";
 
 function emptyLine(): InvoiceLine {
-  return { id: newId(), description: "", quantity: 1, unit: "m³", unitPrice: 0 };
+  return { id: newId(), description: "", quantity: 1, unit: "saat", unitPrice: 0 };
 }
 
 function blankInvoice(): Invoice {

@@ -50,10 +50,12 @@ function orDash(value: string) {
   return trimmed.length > 0 ? trimmed : "—";
 }
 
-export async function downloadInvoicePdf(
-  invoice: Invoice,
-  company: CompanyProfile,
-) {
+export function invoicePdfFileName(invoice: Invoice) {
+  const safeName = (invoice.number || "fatura").replace(/[\\/:*?"<>|]+/g, "-");
+  return `fatura-${safeName}.pdf`;
+}
+
+async function renderInvoicePdf(invoice: Invoice, company: CompanyProfile) {
   const fonts = await loadFonts();
   const logoRes = await fetch(brandAsset(brand.logoSrc));
   if (!logoRes.ok) throw new Error("Logo yüklenemedi.");
@@ -178,6 +180,15 @@ export async function downloadInvoicePdf(
     color: muted,
   });
 
-  const safeName = (invoice.number || "fatura").replace(/[\\/:*?"<>|]+/g, "-");
-  pdf.save(`fatura-${safeName}.pdf`);
+  return pdf;
+}
+
+export async function invoicePdfBlob(invoice: Invoice, company: CompanyProfile) {
+  const pdf = await renderInvoicePdf(invoice, company);
+  return pdf.output("blob");
+}
+
+export async function downloadInvoicePdf(invoice: Invoice, company: CompanyProfile) {
+  const pdf = await renderInvoicePdf(invoice, company);
+  pdf.save(invoicePdfFileName(invoice));
 }

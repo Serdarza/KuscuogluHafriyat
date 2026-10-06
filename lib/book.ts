@@ -158,6 +158,7 @@ function normalizeInvoice(value: unknown): Invoice | null {
     adSoyad: text(row.adSoyad),
     tckn: text(row.tckn),
     address: text(row.address),
+    phone: text(row.phone) || undefined,
     lines,
     vatRate: num(row.vatRate),
     paymentStatus: payment(row.paymentStatus),

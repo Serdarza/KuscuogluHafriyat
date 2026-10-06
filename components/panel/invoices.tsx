@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -33,8 +33,41 @@ import {
   lineAmount,
   newId,
 } from "@/lib/format";
+import { shareInvoice, whatsAppHref } from "@/lib/invoice-share";
 import { downloadInvoicePdf } from "@/lib/pdf";
+import { cn } from "@/lib/utils";
 import type { Invoice, InvoiceLine, PaymentStatus, PeriodFilter } from "@/lib/types";
+
+function ShareRow({
+  invoice,
+  pdfBusy,
+  onShare,
+  onPdf,
+}: {
+  invoice: Invoice;
+  pdfBusy: boolean;
+  onShare: () => void;
+  onPdf: () => void;
+}) {
+  return (
+    <>
+      <a
+        href={whatsAppHref(invoice)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={cn(buttonVariants({ variant: "outline", size: "sm" }), "h-10 px-3")}
+      >
+        WhatsApp
+      </a>
+      <Button type="button" size="sm" variant="outline" className="h-10 px-3" onClick={onShare}>
+        Paylaş
+      </Button>
+      <Button type="button" size="sm" className="h-10 px-3" onClick={onPdf} disabled={pdfBusy}>
+        {pdfBusy ? "PDF hazırlanıyor…" : "PDF indir"}
+      </Button>
+    </>
+  );
+}
 
 function emptyLine(): InvoiceLine {
   return { id: newId(), description: "", quantity: 1, unit: "saat", unitPrice: 0 };
@@ -72,6 +105,7 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
   const [pdfError, setPdfError] = useState<string | null>(null);
   const [pdfBusy, setPdfBusy] = useState<string | null>(null);
   const [postIncome, setPostIncome] = useState(false);
+  const [shareNote, setShareNote] = useState<string | null>(null);
 
   const openEditor = (invoice: Invoice) => {
     setEditing(invoice);
@@ -106,11 +140,20 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
       adSoyad: editing.adSoyad.trim(),
       tckn: editing.tckn.trim(),
       address: editing.address.trim(),
+      phone: editing.phone?.trim() || undefined,
       lines,
       sample: false,
     };
     saveInvoice(row, { postIncome });
     setOpen(false);
+  };
+
+  const share = async (invoice: Invoice) => {
+    setShareNote(null);
+    setPdfError(null);
+    const result = await shareInvoice(invoice, company);
+    if (result === "copied") setShareNote("Paylaşım bu cihazda yok. Metin kopyalandı.");
+    if (result === "unavailable") setShareNote("Paylaşım bu cihazda yok.");
   };
 
   const download = async (invoice: Invoice) => {
@@ -139,6 +182,7 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
         </Button>
       </div>
       {pdfError ? <p className="text-sm text-destructive">{pdfError}</p> : null}
+      {shareNote ? <p className="text-sm text-clay">{shareNote}</p> : null}
       {rows.length === 0 ? (
         <p className="rounded-xl bg-card px-4 py-10 text-center text-sm text-muted-foreground ring-1 ring-foreground/10">
           Bu dönemde fatura yok.
@@ -165,9 +209,12 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
                 <p className="font-display text-4xl leading-none">{formatTry(invoiceGross(invoice))}</p>
               </div>
               <div className="mt-4 flex flex-wrap gap-2">
-                <Button type="button" size="sm" onClick={() => download(invoice)} disabled={pdfBusy === invoice.id}>
-                  {pdfBusy === invoice.id ? "PDF hazırlanıyor…" : "PDF indir"}
-                </Button>
+                <ShareRow
+                  invoice={invoice}
+                  pdfBusy={pdfBusy === invoice.id}
+                  onShare={() => share(invoice)}
+                  onPdf={() => download(invoice)}
+                />
                 <Button type="button" size="sm" variant="outline" onClick={() => openEditor(invoice)}>
                   Düzenle
                 </Button>
@@ -243,6 +290,13 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
                 </div>
               )}
               <TextField label="Adres" value={editing.address} onChange={(address) => setEditing({ ...editing, address })} />
+              <TextField
+                label="Telefon"
+                value={editing.phone ?? ""}
+                onChange={(phone) => setEditing({ ...editing, phone })}
+                hint="İsteğe bağlı. Doluysa WhatsApp bu numarayı açar."
+                inputMode="tel"
+              />
               <div className="grid gap-3 sm:grid-cols-2">
                 <FieldSelect
                   label="KDV"
@@ -371,11 +425,20 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
             </div>
           ) : null}
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => editing && download({ ...editing, id: editing.id || "taslak" })}>
-              PDF indir
-            </Button>
-            <Button type="button" onClick={save}>Kaydet</Button>
+          <DialogFooter className="flex-col items-stretch gap-2 sm:flex-row sm:flex-wrap sm:justify-end">
+            {editing?.id ? (
+              <ShareRow
+                invoice={editing}
+                pdfBusy={pdfBusy === editing.id}
+                onShare={() => share(editing)}
+                onPdf={() => download(editing)}
+              />
+            ) : (
+              <Button type="button" variant="outline" className="h-10" onClick={() => editing && download({ ...editing, id: editing.id || "taslak" })}>
+                PDF indir
+              </Button>
+            )}
+            <Button type="button" className="h-10" onClick={save}>Kaydet</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

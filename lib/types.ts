@@ -65,6 +65,8 @@ export type Invoice = {
   adSoyad: string;
   tckn: string;
   address: string;
+  /** Optional customer phone. Used only to open WhatsApp. */
+  phone?: string;
   lines: InvoiceLine[];
   vatRate: number;
   paymentStatus: PaymentStatus;

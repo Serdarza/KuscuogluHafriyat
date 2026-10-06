@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "company": {
+    "phone": "05531084854",
+    "email": "",
+    "address": "",
+    "city": "Düzce/ Merkez",
+    "unvan": "Kuşçuoğlu Hafriyat"
+  },
+  "ledger": {
+    "incomes": [
+      {
+        "id": "8834610f-24de-4f60-a3a2-c90de4b5fabd",
+        "date": "2026-10-06",
+        "customerType": "sirket",
+        "name": "SERDAR LTD",
+        "jobType": "EV TEMELİ KAZILDI.",
+        "amount": 31500,
+        "vatRate": 0,
+        "paymentStatus": "beklemede",
+        "invoiceId": "50020a36-f655-4211-ac28-8f69e0c5975c",
+        "sample": false
+      }
+    ],
+    "expenses": [],
+    "fuels": [],
+    "invoices": [
+      {
+        "id": "0f34aca0-6acf-4368-933b-ae26eb98d5b0",
+        "number": "KH-2026-10-06-01",
+        "date": "2026-10-06",
+        "jobStart": "2026-10-06",
+        "jobEnd": "2026-10-06",
+        "customerType": "sirket",
+        "unvan": "ROTALİNK",
+        "adSoyad": "",
+        "tckn": "",
+        "address": "KAYSERİ",
+        "lines": [
+          {
+            "id": "93ba431e-b674-43b6-ad45-51ac83b863d3",
+            "description": "TEMEL",
+            "quantity": 1,
+            "unit": "saat",
+            "unitPrice": 3000
+          }
+        ],
+        "vatRate": 0,
+        "paymentStatus": "beklemede",
+        "sample": false
+      }
+    ]
+  }
+}

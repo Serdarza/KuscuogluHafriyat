@@ -1108,38 +1108,6 @@
         "sample": true
       }
     ],
-    "invoices": [
-      {
-        "id": "ornek-fatura-1",
-        "number": "KH-2026-10-03-01",
-        "date": "2026-10-03",
-        "jobStart": "2026-10-01",
-        "jobEnd": "2026-10-03",
-        "customerType": "sirket",
-        "unvan": "Örnek — Parsel Kazı Ltd.",
-        "adSoyad": "",
-        "tckn": "",
-        "address": "Örnek saha — adres yazılmadı",
-        "lines": [
-          {
-            "id": "ornek-kalem-1",
-            "description": "Temel kazısı",
-            "quantity": 420,
-            "unit": "m³",
-            "unitPrice": 280
-          },
-          {
-            "id": "ornek-kalem-2",
-            "description": "Moloz nakliyesi",
-            "quantity": 6,
-            "unit": "sefer",
-            "unitPrice": 4500
-          }
-        ],
-        "vatRate": 20,
-        "paymentStatus": "beklemede",
-        "sample": true
-      }
-    ]
+    "invoices": []
   }
 }

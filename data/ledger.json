@@ -891,24 +891,6 @@
         "machine": "Paletli ekskavatör",
         "note": "Örnek diş ve pim",
         "sample": true
-      },
-      {
-        "id": "ornek-gider-mazot-2026-10",
-        "date": "2026-10-02",
-        "category": "mazot",
-        "amount": 14067.9,
-        "machine": "Lastikli kepçe",
-        "note": "Örnek — aynı ayın litre kaydı",
-        "sample": true
-      },
-      {
-        "id": "ornek-gider-iscilik-2026-10",
-        "date": "2026-10-04",
-        "category": "iscilik",
-        "amount": 24500,
-        "machine": "Saha ekibi",
-        "note": "Örnek yevmiye",
-        "sample": true
       }
     ],
     "fuels": [

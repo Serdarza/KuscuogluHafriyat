@@ -123,7 +123,7 @@ export function seedLedger(): Ledger {
   const invoices: Invoice[] = [
     {
       id: "ornek-fatura-1",
-      number: "KH-ORNEK-001",
+      number: "KH-2026-10-03-01",
       date: "2026-10-03",
       jobStart: "2026-10-01",
       jobEnd: "2026-10-03",

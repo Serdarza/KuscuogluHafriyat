@@ -23,6 +23,8 @@ import {
   formatDate,
   formatJobRange,
   formatTry,
+  invoiceNumberForDateChange,
+  suggestInvoiceNumber,
   todayIso,
   inPeriod,
   invoiceGross,
@@ -38,11 +40,11 @@ function emptyLine(): InvoiceLine {
   return { id: newId(), description: "", quantity: 1, unit: "saat", unitPrice: 0 };
 }
 
-function blankInvoice(): Invoice {
+function blankInvoice(invoices: Invoice[]): Invoice {
   const today = todayIso();
   return {
     id: "",
-    number: `KH-${today.slice(0, 4)}-${String(Date.now()).slice(-4)}`,
+    number: suggestInvoiceNumber(today, invoices),
     date: today,
     jobStart: today,
     jobEnd: today,
@@ -132,7 +134,7 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
             Şirket ya da şahıs için hazırlanmış fatura PDF’i. GİB e-Fatura değildir. Liste fatura tarihine göre süzülür; iş tarihi ayrıdır.
           </p>
         </div>
-        <Button type="button" className="h-10 px-4" onClick={() => openEditor(blankInvoice())}>
+        <Button type="button" className="h-10 px-4" onClick={() => openEditor(blankInvoice(ledger.invoices))}>
           Fatura hazırla
         </Button>
       </div>
@@ -195,7 +197,13 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
                   label="Fatura tarihi"
                   type="date"
                   value={editing.date}
-                  onChange={(date) => setEditing({ ...editing, date })}
+                  onChange={(date) =>
+                    setEditing({
+                      ...editing,
+                      date,
+                      number: invoiceNumberForDateChange(editing.number, editing.date, date, ledger.invoices, editing.id),
+                    })
+                  }
                   hint="Varsayılan bugün. İş bitişine bağlanmaz."
                 />
               </div>

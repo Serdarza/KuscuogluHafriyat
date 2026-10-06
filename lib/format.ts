@@ -169,6 +169,55 @@ export function todayIso(date = new Date()) {
   return `${date.getFullYear()}-${month}-${day}`;
 }
 
+function autoNumberPattern(date: string) {
+  return new RegExp(`^KH-${date}-(\\d{2})$`);
+}
+
+export function isAutoInvoiceNumber(number: string, date: string) {
+  return autoNumberPattern(date).test(number.trim());
+}
+
+export function formatInvoiceNumber(date: string, sequence: number) {
+  return `KH-${date}-${String(sequence).padStart(2, "0")}`;
+}
+
+/** Next KH-YYYY-MM-DD-NN for this fatura tarihi. Ignores the invoice being edited. */
+export function suggestInvoiceNumber(
+  date: string,
+  invoices: Pick<Invoice, "id" | "date" | "number">[],
+  ignoreId = "",
+) {
+  const taken = new Set<number>();
+  let count = 0;
+  for (const invoice of invoices) {
+    if (ignoreId && invoice.id === ignoreId) continue;
+    const match = invoice.number.trim().match(autoNumberPattern(date));
+    if (match) taken.add(Number(match[1]));
+    if (invoice.date === date) count += 1;
+  }
+  const highest = taken.size > 0 ? Math.max(...taken) : 0;
+  let next = Math.max(highest + 1, count + 1, 1);
+  while (taken.has(next)) next += 1;
+  return formatInvoiceNumber(date, next);
+}
+
+/**
+ * Replace the number only when it is still the automatic number for the previous fatura tarihi.
+ * A hand-typed number stays as written.
+ */
+export function invoiceNumberForDateChange(
+  current: string,
+  oldDate: string,
+  newDate: string,
+  invoices: Pick<Invoice, "id" | "date" | "number">[],
+  ignoreId = "",
+) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(newDate)) return current;
+  if (newDate === oldDate) return current;
+  if (!isAutoInvoiceNumber(current, oldDate)) return current;
+  return suggestInvoiceNumber(newDate, invoices, ignoreId);
+}
+
 export function currentMonthValue(date = new Date()) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 }

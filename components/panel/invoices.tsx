@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -33,39 +33,44 @@ import {
   lineAmount,
   newId,
 } from "@/lib/format";
-import { shareInvoice, whatsAppHref } from "@/lib/invoice-share";
+import { shareInvoiceOnWhatsApp, type WhatsAppShareResult } from "@/lib/invoice-share";
 import { downloadInvoicePdf } from "@/lib/pdf";
-import { cn } from "@/lib/utils";
 import type { Invoice, InvoiceLine, PaymentStatus, PeriodFilter } from "@/lib/types";
 
 function ShareRow({
-  invoice,
+  waBusy,
   pdfBusy,
-  onShare,
+  onWhatsApp,
   onPdf,
 }: {
-  invoice: Invoice;
+  waBusy: boolean;
   pdfBusy: boolean;
-  onShare: () => void;
+  onWhatsApp: () => void;
   onPdf: () => void;
 }) {
+  const busy = waBusy || pdfBusy;
   return (
     <>
-      <a
-        href={whatsAppHref(invoice)}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={cn(buttonVariants({ variant: "outline", size: "sm" }), "h-10 px-3")}
-      >
-        WhatsApp
-      </a>
-      <Button type="button" size="sm" variant="outline" className="h-10 px-3" onClick={onShare}>
-        Paylaş
+      <Button type="button" size="sm" variant="outline" className="h-10 px-3" onClick={onWhatsApp} disabled={busy}>
+        {waBusy ? "PDF hazırlanıyor…" : "WhatsApp"}
       </Button>
-      <Button type="button" size="sm" className="h-10 px-3" onClick={onPdf} disabled={pdfBusy}>
+      <Button type="button" size="sm" className="h-10 px-3" onClick={onPdf} disabled={busy}>
         {pdfBusy ? "PDF hazırlanıyor…" : "PDF indir"}
       </Button>
     </>
+  );
+}
+
+function ShareNote({ note }: { note: { text: string; href?: string } }) {
+  return (
+    <p className="text-sm text-clay">
+      {note.text}{" "}
+      {note.href ? (
+        <a href={note.href} target="_blank" rel="noopener noreferrer" className="underline">
+          WhatsApp’ı aç
+        </a>
+      ) : null}
+    </p>
   );
 }
 
@@ -103,9 +108,9 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
   const [removeId, setRemoveId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pdfError, setPdfError] = useState<string | null>(null);
-  const [pdfBusy, setPdfBusy] = useState<string | null>(null);
+  const [busy, setBusy] = useState<{ id: string; kind: "wa" | "pdf" } | null>(null);
   const [postIncome, setPostIncome] = useState(false);
-  const [shareNote, setShareNote] = useState<string | null>(null);
+  const [shareNote, setShareNote] = useState<{ text: string; href?: string } | null>(null);
 
   const openEditor = (invoice: Invoice) => {
     setEditing(invoice);
@@ -148,23 +153,42 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
     setOpen(false);
   };
 
-  const share = async (invoice: Invoice) => {
+  const applyShareResult = (result: WhatsAppShareResult) => {
+    if (result.status === "shared") setShareNote({ text: "Paylaşım penceresi açıldı. PDF’i WhatsApp’tan gönderin." });
+    if (result.status === "cancelled") setShareNote(null);
+    if (result.status === "downloaded") {
+      setShareNote({
+        text: result.opened
+          ? "PDF indirildi. WhatsApp açıldı — dosyayı sohbete ekleyin."
+          : "PDF indirildi. WhatsApp penceresi açılamadı.",
+        href: result.opened ? undefined : result.href,
+      });
+    }
+    if (result.status === "failed") setPdfError(result.message);
+  };
+
+  const whatsApp = async (invoice: Invoice) => {
+    const id = invoice.id || "yeni";
     setShareNote(null);
     setPdfError(null);
-    const result = await shareInvoice(invoice, company);
-    if (result === "copied") setShareNote("Paylaşım bu cihazda yok. Metin kopyalandı.");
-    if (result === "unavailable") setShareNote("Paylaşım bu cihazda yok.");
+    setBusy({ id, kind: "wa" });
+    try {
+      applyShareResult(await shareInvoiceOnWhatsApp(invoice, company));
+    } finally {
+      setBusy(null);
+    }
   };
 
   const download = async (invoice: Invoice) => {
-    setPdfBusy(invoice.id || "yeni");
+    const id = invoice.id || "yeni";
+    setBusy({ id, kind: "pdf" });
     setPdfError(null);
     try {
       await downloadInvoicePdf(invoice, company);
     } catch (cause) {
       setPdfError(cause instanceof Error ? cause.message : "PDF oluşturulamadı.");
     } finally {
-      setPdfBusy(null);
+      setBusy(null);
     }
   };
 
@@ -182,7 +206,7 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
         </Button>
       </div>
       {pdfError ? <p className="text-sm text-destructive">{pdfError}</p> : null}
-      {shareNote ? <p className="text-sm text-clay">{shareNote}</p> : null}
+      {!open && shareNote ? <ShareNote note={shareNote} /> : null}
       {rows.length === 0 ? (
         <p className="rounded-xl bg-card px-4 py-10 text-center text-sm text-muted-foreground ring-1 ring-foreground/10">
           Bu dönemde fatura yok.
@@ -210,9 +234,9 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
               </div>
               <div className="mt-4 flex flex-wrap gap-2">
                 <ShareRow
-                  invoice={invoice}
-                  pdfBusy={pdfBusy === invoice.id}
-                  onShare={() => share(invoice)}
+                  waBusy={busy?.id === invoice.id && busy.kind === "wa"}
+                  pdfBusy={busy?.id === invoice.id && busy.kind === "pdf"}
+                  onWhatsApp={() => whatsApp(invoice)}
                   onPdf={() => download(invoice)}
                 />
                 <Button type="button" size="sm" variant="outline" onClick={() => openEditor(invoice)}>
@@ -294,7 +318,7 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
                 label="Telefon"
                 value={editing.phone ?? ""}
                 onChange={(phone) => setEditing({ ...editing, phone })}
-                hint="İsteğe bağlı. Doluysa WhatsApp bu numarayı açar."
+                hint="İsteğe bağlı. Dosya paylaşımı yoksa WhatsApp bu numarayı açar."
                 inputMode="tel"
               />
               <div className="grid gap-3 sm:grid-cols-2">
@@ -425,12 +449,13 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
             </div>
           ) : null}
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
+          {shareNote ? <ShareNote note={shareNote} /> : null}
           <DialogFooter className="flex-col items-stretch gap-2 sm:flex-row sm:flex-wrap sm:justify-end">
             {editing?.id ? (
               <ShareRow
-                invoice={editing}
-                pdfBusy={pdfBusy === editing.id}
-                onShare={() => share(editing)}
+                waBusy={busy?.id === editing.id && busy.kind === "wa"}
+                pdfBusy={busy?.id === editing.id && busy.kind === "pdf"}
+                onWhatsApp={() => whatsApp(editing)}
                 onPdf={() => download(editing)}
               />
             ) : (

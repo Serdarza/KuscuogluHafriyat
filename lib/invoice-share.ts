@@ -1,5 +1,5 @@
 import { brand } from "@/lib/brand";
-import { formatJobRange, formatSpokenDate, formatTry, invoiceGross } from "@/lib/format";
+import { formatTry, invoiceGross } from "@/lib/format";
 import { invoicePdfBlob, invoicePdfFileName } from "@/lib/pdf";
 import type { CompanyProfile, Invoice } from "@/lib/types";
 
@@ -8,14 +8,25 @@ export function invoiceCustomerName(invoice: Invoice) {
   return name.trim() || "—";
 }
 
-export function invoiceShareText(invoice: Invoice) {
+/** Short caption sent with the PDF on the share sheet. */
+export function invoiceShareSummary(invoice: Invoice) {
+  const number = invoice.number.trim() || "—";
   return [
-    `Kuşçuoğlu Hafriyat — Fatura ${invoice.number.trim() || "—"}`,
+    `Kuşçuoğlu Hafriyat — Fatura ${number}`,
     `Müşteri: ${invoiceCustomerName(invoice)}`,
-    `İş: ${formatJobRange(invoice.jobStart, invoice.jobEnd)}`,
-    `Fatura tarihi: ${formatSpokenDate(invoice.date)}`,
     `Tutar: ${formatTry(invoiceGross(invoice))} (KDV dahil)`,
     `Tel: ${brand.phoneDisplay}`,
+  ].join("\n");
+}
+
+/** wa.me text when the PDF was saved locally and must be attached by hand. */
+export function invoiceDownloadedText(invoice: Invoice) {
+  const number = invoice.number.trim() || "—";
+  return [
+    "Fatura PDF’i indirildi. WhatsApp’ta bu sohbete ekleyin.",
+    `Fatura no: ${number}`,
+    `Müşteri: ${invoiceCustomerName(invoice)}`,
+    `Tutar: ${formatTry(invoiceGross(invoice))} (KDV dahil)`,
   ].join("\n");
 }
 
@@ -30,46 +41,66 @@ export function whatsAppDigits(phone: string | undefined) {
   return digits;
 }
 
-export function whatsAppHref(invoice: Invoice) {
-  const text = encodeURIComponent(invoiceShareText(invoice));
+export function whatsAppHref(invoice: Invoice, text = invoiceDownloadedText(invoice)) {
+  const encoded = encodeURIComponent(text);
   const digits = whatsAppDigits(invoice.phone);
-  return digits ? `https://wa.me/${digits}?text=${text}` : `https://wa.me/?text=${text}`;
+  return digits ? `https://wa.me/${digits}?text=${encoded}` : `https://wa.me/?text=${encoded}`;
 }
 
-export type ShareResult = "shared" | "copied" | "cancelled" | "unavailable";
+export type WhatsAppShareResult =
+  | { status: "shared" }
+  | { status: "cancelled" }
+  | { status: "downloaded"; href: string; opened: boolean }
+  | { status: "failed"; message: string };
 
-export async function shareInvoice(invoice: Invoice, company: CompanyProfile): Promise<ShareResult> {
-  const text = invoiceShareText(invoice);
-  const title = `Fatura ${invoice.number.trim() || "Kuşçuoğlu Hafriyat"}`;
-  if (typeof navigator === "undefined" || typeof navigator.share !== "function") {
-    return (await copyText(text)) ? "copied" : "unavailable";
-  }
-
-  const payload: ShareData = { title, text };
+function canSharePdf(file: File) {
+  if (typeof navigator === "undefined" || typeof navigator.share !== "function") return false;
+  if (typeof navigator.canShare !== "function") return false;
   try {
-    const blob = await invoicePdfBlob(invoice, company);
-    const file = new File([blob], invoicePdfFileName(invoice), { type: "application/pdf" });
-    if (typeof navigator.canShare === "function" && navigator.canShare({ files: [file] })) {
-      payload.files = [file];
-    }
-  } catch {
-    // Text share still works when the PDF cannot be built.
-  }
-
-  try {
-    await navigator.share(payload);
-    return "shared";
-  } catch (cause) {
-    if (cause instanceof DOMException && cause.name === "AbortError") return "cancelled";
-    return (await copyText(text)) ? "copied" : "unavailable";
-  }
-}
-
-async function copyText(text: string) {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
+    return navigator.canShare({ files: [file] });
   } catch {
     return false;
   }
+}
+
+function saveBlob(blob: Blob, fileName: string) {
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = fileName;
+  document.body.append(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+function openWhatsApp(href: string) {
+  const opened = window.open(href, "_blank", "noopener,noreferrer");
+  return opened !== null;
+}
+
+export async function shareInvoiceOnWhatsApp(
+  invoice: Invoice,
+  company: CompanyProfile,
+): Promise<WhatsAppShareResult> {
+  let file: File;
+  try {
+    const blob = await invoicePdfBlob(invoice, company);
+    file = new File([blob], invoicePdfFileName(invoice), { type: "application/pdf" });
+  } catch (cause) {
+    return { status: "failed", message: cause instanceof Error ? cause.message : "PDF oluşturulamadı." };
+  }
+
+  if (canSharePdf(file)) {
+    try {
+      await navigator.share({ files: [file], text: invoiceShareSummary(invoice) });
+      return { status: "shared" };
+    } catch (cause) {
+      if (cause instanceof DOMException && cause.name === "AbortError") return { status: "cancelled" };
+    }
+  }
+
+  saveBlob(file, file.name);
+  const href = whatsAppHref(invoice);
+  return { status: "downloaded", href, opened: openWhatsApp(href) };
 }

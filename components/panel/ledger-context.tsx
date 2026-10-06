@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import { emptyBook, emptyCompany, saveInvoiceInLedger, type Book } from "@/lib/book";
-import { formatDateTime, newId } from "@/lib/format";
+import { newId } from "@/lib/format";
 import { defaultGithubSettings, GithubError, readRemoteBook, writeRemoteBook, type GithubSettings } from "@/lib/github-ledger";
 import { seedLedger } from "@/lib/seed";
 import { readCachedBook, readGithubSettings, writeCachedBook, writeGithubSettings } from "@/lib/storage";
@@ -57,9 +57,16 @@ type LedgerContextValue = {
 
 const LedgerContext = createContext<LedgerContextValue | null>(null);
 
+const NOT_CONNECTED = "Bağlı değil — bir kez bağla. Kayıtlar bağlanmadan kalıcı olmaz.";
+
+function savedLine(iso: string) {
+  const clock = new Intl.DateTimeFormat("tr-TR", { hour: "2-digit", minute: "2-digit" }).format(new Date(iso));
+  return `GitHub’a kaydedildi · ${clock}`;
+}
+
 const idleSync: SyncStatus = {
   phase: "loading",
-  detail: "Defter okunuyor…",
+  detail: "Açılıyor…",
   savedAt: null,
   dirty: false,
   hasToken: false,
@@ -106,7 +113,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
     if (!settings.token.trim()) {
       markSync({
         phase: "local",
-        detail: "Jeton yok. Defter bu tarayıcıda. GitHub’a kaydetmek için Firma kartına jeton yazın.",
+        detail: NOT_CONNECTED,
         savedAt: savedAtRef.current,
         dirty: true,
         hasToken: false,
@@ -143,7 +150,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
           dirtyRef.current = false;
           markSync({
             phase: "saved",
-            detail: `Son kayıt ${formatDateTime(savedAt)}`,
+            detail: savedLine(savedAt),
             savedAt,
             dirty: false,
             hasToken: true,
@@ -155,7 +162,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       const detail = cause instanceof GithubError ? cause.message : "GitHub’a yazılamadı.";
       markSync({
         phase: "error",
-        detail: `${detail} Değişiklik bu tarayıcıda duruyor.`,
+        detail,
         savedAt: savedAtRef.current,
         dirty: true,
         hasToken: true,
@@ -174,7 +181,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
     if (!hasToken) {
       markSync({
         phase: "local",
-        detail: "Henüz GitHub’a yazılmadı. Kayıt bu tarayıcıda.",
+        detail: NOT_CONNECTED,
         savedAt: savedAtRef.current,
         dirty: true,
         hasToken: false,
@@ -191,7 +198,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
     if (timerRef.current) window.clearTimeout(timerRef.current);
     timerRef.current = window.setTimeout(() => {
       void pushNow();
-    }, 600);
+    }, 1200);
   }, [markSync, pushNow]);
 
   const change = useCallback(
@@ -213,7 +220,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
     setGithub(settings);
     markSync({
       phase: "loading",
-      detail: "Defter GitHub’dan okunuyor…",
+      detail: "Açılıyor…",
       savedAt: null,
       dirty: false,
       hasToken: Boolean(settings.token.trim()),
@@ -246,11 +253,7 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
       if (remote.kind === "invalid") {
         if (cached) {
           shaRef.current = remote.sha;
-          adoptLocal(
-            cached,
-            `${remote.message} Tarayıcı kopyası açık. Kaydetmek uzak dosyanın üzerine yazar.`,
-            "error",
-          );
+          adoptLocal(cached, remote.message, "error");
           return;
         }
         setStatus("error");
@@ -263,10 +266,8 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
         publish(remote.book);
         cache(remote.book);
         markSync({
-          phase: "saved",
-          detail: settings.token.trim()
-            ? "GitHub’dan okundu."
-            : "GitHub’dan okundu. Yazmak için jeton gerekir.",
+          phase: settings.token.trim() ? "saved" : "local",
+          detail: settings.token.trim() ? "GitHub’dan açıldı" : NOT_CONNECTED,
           savedAt: null,
           dirty: false,
           hasToken: Boolean(settings.token.trim()),
@@ -277,30 +278,28 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
 
       shaRef.current = remote.kind === "empty" ? remote.sha : null;
       if (cached && (cached.ledger.incomes.length || cached.ledger.expenses.length || cached.ledger.fuels.length || cached.ledger.invoices.length || Object.values(cached.company).some((value) => value.trim()))) {
-        adoptLocal(cached, "Uzak defter boş. Bu tarayıcıdaki kayıt duruyor ve henüz eşitlenmedi.", "local");
+        adoptLocal(cached, settings.token.trim() ? "Kaydediliyor…" : NOT_CONNECTED, "local");
+        if (settings.token.trim()) void pushNow();
         return;
       }
       const seeded: Book = { version: 1, company: emptyCompany(), ledger: seedLedger() };
-      adoptLocal(
-        seeded,
-        "Örnek defter yüklendi. GitHub dosyası yoktu veya boştu; jetonla kaydedince yazılır. Gerçek kayıtların üzerine yazılmaz.",
-        "local",
-      );
+      adoptLocal(seeded, settings.token.trim() ? "Kaydediliyor…" : NOT_CONNECTED, "local");
+      if (settings.token.trim()) void pushNow();
     } catch (cause) {
       const reason = cause instanceof GithubError ? cause.message : "GitHub okunamadı.";
       if (cached) {
-        adoptLocal(cached, `${reason} Tarayıcı kopyası açık, henüz eşitlenmedi.`, "error");
+        adoptLocal(cached, reason, "error");
         return;
       }
       if (cacheError) {
         setStatus("error");
-        setError(`${reason} ${cacheError}`);
+        setError(reason);
         return;
       }
       const seeded: Book = { version: 1, company: emptyCompany(), ledger: seedLedger() };
-      adoptLocal(seeded, `${reason} Örnek defter bu tarayıcıda. Henüz GitHub’a yazılmadı.`, "error");
+      adoptLocal(seeded, settings.token.trim() ? reason : NOT_CONNECTED, settings.token.trim() ? "error" : "local");
     }
-  }, [cache, markSync, publish]);
+  }, [cache, markSync, publish, pushNow]);
 
   useEffect(() => {
     // Read after mount so the server shell and the first client paint match.
@@ -367,17 +366,19 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
           const stored = writeGithubSettings(next);
           settingsRef.current = stored;
           setGithub(stored);
-          markSync({
-            ...sync,
-            hasToken: Boolean(stored.token.trim()),
-            detail: stored.token.trim()
-              ? dirtyRef.current
-                ? "Jeton bu tarayıcıda. GitHub’a kaydet ile defteri yazın."
-                : sync.detail
-              : "Jeton silindi. Yeni kayıtlar eşitlenmez.",
-            phase: stored.token.trim() ? (dirtyRef.current ? "local" : sync.phase) : "local",
-            dirty: dirtyRef.current,
-          });
+          if (!stored.token.trim()) {
+            markSync({
+              phase: "local",
+              detail: NOT_CONNECTED,
+              savedAt: savedAtRef.current,
+              dirty: dirtyRef.current,
+              hasToken: false,
+            });
+            return;
+          }
+          if (timerRef.current) window.clearTimeout(timerRef.current);
+          dirtyRef.current = true;
+          void pushNow();
         } catch {
           setError("Jeton bu tarayıcıya yazılamadı.");
         }
@@ -405,13 +406,15 @@ export function LedgerProvider({ children }: { children: ReactNode }) {
         cache(seeded);
         setStatus("ready");
         setError(null);
+        const hasToken = Boolean(settingsRef.current.token.trim());
         markSync({
-          phase: "local",
-          detail: "Örnek defter bu tarayıcıda. GitHub’a kendiliğinden yazılmadı.",
+          phase: hasToken ? "saving" : "local",
+          detail: hasToken ? "Kaydediliyor…" : NOT_CONNECTED,
           savedAt: savedAtRef.current,
           dirty: true,
-          hasToken: Boolean(settingsRef.current.token.trim()),
+          hasToken,
         });
+        if (hasToken) void pushNow();
       },
     };
   }, [cache, change, company, error, github, ledger, load, markSync, publish, pushNow, status, sync]);

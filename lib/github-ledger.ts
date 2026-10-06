@@ -100,10 +100,10 @@ function timeoutSignal(ms: number) {
 
 function describeStatus(status: number) {
   if (status === 401 || status === 403) {
-    return "Jeton reddedildi. Bu depoya contents:write yetkisi olan ince ayarlı bir jeton kullanın.";
+    return "Jeton kabul edilmedi. Yalnızca KuscuogluHafriyat ve Contents: Read and write olmalı.";
   }
-  if (status === 404) return "Depo veya dosya bulunamadı.";
-  if (status === 409 || status === 422) return "Dosya başka bir kayıtla çakıştı. Yeniden deneyin.";
+  if (status === 404) return "Depo bulunamadı.";
+  if (status === 409 || status === 422) return "Kayıt çakıştı. Şimdi kaydet ile yeniden dene.";
   return `GitHub yanıtı ${status}.`;
 }
 
@@ -116,7 +116,8 @@ async function readResponse(response: Response) {
   } catch {
     extra = "";
   }
-  throw new GithubError(`${describeStatus(response.status)}${extra}`, response.status);
+  const known = [401, 403, 404, 409, 422].includes(response.status);
+  throw new GithubError(known ? describeStatus(response.status) : `${describeStatus(response.status)}${extra}`, response.status);
 }
 
 function interpretText(text: string, sha: string | null): RemoteRead {

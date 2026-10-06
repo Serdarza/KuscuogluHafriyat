@@ -71,17 +71,26 @@ function PanelScreen() {
         </div>
       </header>
       <div className={cn("px-3 py-2 text-sm sm:px-6", syncTone)}>
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-2">
           <p>{ledger.sync.detail}</p>
-          {ledger.sync.dirty || ledger.sync.phase === "error" || ledger.sync.phase === "local" ? (
+          {!ledger.sync.hasToken && ledger.status === "ready" ? (
             <Button
               type="button"
               variant="outline"
-              className="h-9 border-white/30 bg-transparent text-inherit hover:bg-white/10 hover:text-inherit"
-              onClick={ledger.pushToGithub}
-              disabled={ledger.sync.phase === "saving"}
+              className="h-8 border-white/30 bg-transparent px-3 text-inherit hover:bg-white/10 hover:text-inherit"
+              onClick={() => setSection("firma")}
             >
-              {ledger.sync.phase === "saving" ? "Kaydediliyor…" : "GitHub’a kaydet"}
+              Bağla
+            </Button>
+          ) : null}
+          {ledger.sync.phase === "error" && ledger.sync.hasToken ? (
+            <Button
+              type="button"
+              variant="outline"
+              className="h-8 border-white/30 bg-transparent px-3 text-inherit hover:bg-white/10 hover:text-inherit"
+              onClick={ledger.pushToGithub}
+            >
+              Şimdi kaydet
             </Button>
           ) : null}
         </div>

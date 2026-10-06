@@ -1,11 +1,11 @@
 import Image from "next/image";
-import { brand } from "@/lib/brand";
+import { brand, brandAsset } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 
 export function BrandLogo({ className }: { className?: string }) {
   return (
     <Image
-      src={brand.logoSrc}
+      src={brandAsset(brand.logoSrc)}
       alt="Kuşçuoğlu, Hafriyat ve Oto Kurtarıcı"
       width={225}
       height={225}

@@ -7,6 +7,7 @@ import {
   invoiceVatAmount,
   lineAmount,
 } from "@/lib/format";
+import { brand, brandAsset } from "@/lib/brand";
 import type { CompanyProfile, Invoice } from "@/lib/types";
 
 const ink = [28, 25, 23] as const;
@@ -53,6 +54,9 @@ export async function downloadInvoicePdf(
   company: CompanyProfile,
 ) {
   const fonts = await loadFonts();
+  const logoRes = await fetch(brandAsset(brand.logoSrc));
+  if (!logoRes.ok) throw new Error("Logo yüklenemedi.");
+  const logo = `data:image/jpeg;base64,${bytesToBase64(await logoRes.arrayBuffer())}`;
   const pdf = new jsPDF({ unit: "mm", format: "a4" });
   pdf.addFileToVFS("NotoSans-Regular.ttf", fonts.regular);
   pdf.addFileToVFS("NotoSans-Bold.ttf", fonts.bold);
@@ -73,42 +77,44 @@ export async function downloadInvoicePdf(
   };
 
   pdf.setFillColor(ink[0], ink[1], ink[2]);
-  pdf.rect(0, 0, 210, 34, "F");
+  pdf.rect(0, 0, 210, 42, "F");
   pdf.setFillColor(ochre[0], ochre[1], ochre[2]);
-  pdf.rect(0, 34, 210, 2.2, "F");
+  pdf.rect(0, 42, 210, 2.2, "F");
+  pdf.addImage(logo, "JPEG", 8, 6, 30, 30);
 
-  write("KUŞÇUOĞLU HAFRİYAT", 14, 15, { bold: true, size: 18, color: paper });
-  write("SAHA İŞLERİ", 14, 23, { size: 10, color: ochre });
-  write("FATURA", 196, 14, { bold: true, size: 16, align: "right", color: paper });
-  write(invoice.number || "Numarasız", 196, 21, {
+  write(brand.owner, 44, 18, { bold: true, size: 13, color: paper });
+  write(brand.phoneDisplay, 44, 26, { size: 12, color: ochre });
+  write("FATURA", 196, 16, { bold: true, size: 16, align: "right", color: paper });
+  write(invoice.number || "Numarasız", 196, 24, {
     size: 10,
     align: "right",
     color: paper,
   });
-  write(formatDate(invoice.date), 196, 27, {
+  write(formatDate(invoice.date), 196, 31, {
     size: 10,
     align: "right",
     color: paper,
   });
 
   pdf.setFillColor(246, 236, 214);
-  pdf.rect(14, 42, 182, 12, "F");
+  pdf.rect(14, 50, 182, 12, "F");
   write(
     "Hazırlanmış fatura PDF'idir. GİB e-Fatura belgesi değildir.",
     18,
-    49.5,
+    57.5,
     { bold: true, size: 10, color: ink },
   );
 
-  write("DÜZENLEYEN", 14, 64, { bold: true, size: 9, color: ochre });
-  write("MÜŞTERİ", 110, 64, { bold: true, size: 9, color: ochre });
+  write("DÜZENLEYEN", 14, 72, { bold: true, size: 9, color: ochre });
+  write("MÜŞTERİ", 110, 72, { bold: true, size: 9, color: ochre });
 
   const issuer = [
     orDash(company.unvan),
+    `Yetkili: ${brand.owner}`,
     company.vergiDairesi.trim() ? `Vergi dairesi: ${company.vergiDairesi.trim()}` : "Vergi dairesi: —",
     company.vkn.trim() ? `VKN: ${company.vkn.trim()}` : "VKN: —",
     orDash([company.address, company.city].filter((part) => part.trim()).join(", ")),
-    company.phone.trim() ? company.phone.trim() : "Telefon: —",
+    `Telefon: ${company.phone.trim() || brand.phoneDisplay}`,
     company.email.trim() ? company.email.trim() : "E-posta: —",
   ];
 
@@ -132,14 +138,14 @@ export async function downloadInvoicePdf(
 
   issuer.forEach((line, index) => {
     const wrapped = pdf.splitTextToSize(line, 84);
-    write(wrapped[0] ?? "", 14, 71 + index * 6, { size: 10 });
+    write(wrapped[0] ?? "", 14, 79 + index * 5.5, { size: 9 });
   });
   customer.forEach((line, index) => {
     const wrapped = pdf.splitTextToSize(line, 84);
-    write(wrapped[0] ?? "", 110, 71 + index * 6, { size: 10 });
+    write(wrapped[0] ?? "", 110, 79 + index * 5.5, { size: 9 });
   });
 
-  let y = 112;
+  let y = 122;
   pdf.setFillColor(ink[0], ink[1], ink[2]);
   pdf.rect(14, y, 182, 8, "F");
   write("Açıklama", 17, y + 5.4, { size: 9, color: paper, bold: true });

@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { CompanyCard } from "@/components/site/company-card";
+import { PhoneLink } from "@/components/site/brand-mark";
 import { Wordmark } from "@/components/site/shell";
+import { brand } from "@/lib/brand";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ExpenseDesk, FuelDesk, IncomeDesk } from "@/components/panel/records";
@@ -55,7 +57,8 @@ function PanelScreen() {
           </Link>
           <div className="text-right">
             <p className="font-display text-2xl leading-none sm:text-3xl">Saha defteri</p>
-            <p className="text-xs text-paper/70">Giriş yok · bu tarayıcı</p>
+            <p className="text-xs text-paper/70">{brand.owner}</p>
+            <PhoneLink className="text-sm font-semibold text-ochre" />
           </div>
         </div>
       </header>

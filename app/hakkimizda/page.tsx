@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BrandLogo, OwnerPhone } from "@/components/site/brand-mark";
 import { PageIntro, SiteShell } from "@/components/site/shell";
 import { buttonVariants } from "@/components/ui/button";
 import { steps } from "@/lib/content";
@@ -34,9 +35,11 @@ export default function AboutPage() {
           </ol>
         </div>
         <div className="rounded-xl bg-card p-6 ring-1 ring-foreground/10">
-          <h2 className="text-xl font-semibold">Ne yazılmaz</h2>
-          <ul className="mt-4 grid gap-3 text-sm leading-6 text-muted-foreground">
-            <li>Telefon, adres, vergi dairesi ve VKN siz girene kadar boş kalır.</li>
+          <BrandLogo className="h-28 w-28" />
+          <h2 className="mt-4 text-xl font-semibold">Sahip</h2>
+          <OwnerPhone tone="light" className="mt-3" />
+          <ul className="mt-6 grid gap-3 text-sm leading-6 text-muted-foreground">
+            <li>Adres, vergi dairesi ve VKN firma kartına yazılmadan faturada boş kalır.</li>
             <li>Müşteri listesi ve sokak adresi referans diye konmaz.</li>
             <li>Paneldeki gelir, gider, mazot ve fatura bu tarayıcıda durur. Hesap açılmaz.</li>
             <li>İndirilen PDF hazırlanmış faturadır. GİB e-Fatura değildir.</li>

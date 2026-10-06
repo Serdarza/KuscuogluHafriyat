@@ -13,6 +13,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { BrandLogo, OwnerPhone, PhoneLink } from "@/components/site/brand-mark";
+import { brand } from "@/lib/brand";
 import { CompanyLines } from "@/components/site/company-card";
 import { cn } from "@/lib/utils";
 
@@ -37,12 +39,7 @@ function isActive(path: string, href: string) {
 }
 
 export function Wordmark() {
-  return (
-    <span className="flex flex-col leading-none">
-      <span className="font-display text-[1.65rem] tracking-wide text-paper">KUŞÇUOĞLU</span>
-      <span className="text-[0.65rem] font-semibold tracking-[0.28em] text-ochre">HAFRİYAT</span>
-    </span>
-  );
+  return <BrandLogo className="h-16 w-16 sm:h-20 sm:w-20" />;
 }
 
 export function Header() {
@@ -51,7 +48,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-ink text-paper">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+      <div className="mx-auto flex min-h-20 max-w-6xl items-center justify-between gap-3 px-4 py-2 sm:px-6">
         <Link href="/" className="shrink-0" aria-label="Kuşçuoğlu Hafriyat ana sayfa">
           <Wordmark />
         </Link>
@@ -70,10 +67,14 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          <div className="text-right">
+            <p className="hidden text-sm font-semibold leading-tight lg:block">{brand.owner}</p>
+            <PhoneLink className="text-sm font-semibold text-ochre" />
+          </div>
           <Link
             href="/panel"
-            className={cn(buttonVariants({ variant: "outline", size: "lg" }), "hidden h-9 border-ochre/70 bg-transparent px-3 text-paper hover:bg-white/5 hover:text-paper sm:inline-flex")}
+            className={cn(buttonVariants({ variant: "outline", size: "lg" }), "hidden h-9 border-ochre/70 bg-transparent px-3 text-paper hover:bg-white/5 hover:text-paper md:inline-flex")}
           >
             Saha defteri
           </Link>
@@ -86,8 +87,11 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="left" className="bg-paper text-ink">
               <SheetHeader>
-                <SheetTitle className="font-display text-2xl tracking-wide">KUŞÇUOĞLU</SheetTitle>
-                <SheetDescription>Hafriyat ve saha işleri</SheetDescription>
+                <SheetTitle className="sr-only">Menü</SheetTitle>
+                <BrandLogo className="h-24 w-24" />
+                <SheetDescription>
+                  {brand.owner} · <PhoneLink className="font-semibold text-clay" />
+                </SheetDescription>
               </SheetHeader>
               <nav className="grid gap-1 px-4" aria-label="Mobil sayfalar">
                 {NAV.map((item) => (
@@ -124,7 +128,7 @@ export function Footer() {
     <footer className="mt-auto border-t border-white/10 bg-ink text-paper">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-3">
         <div>
-          <Wordmark />
+          <BrandLogo className="h-28 w-28" />
           <p className="mt-4 max-w-xs text-sm leading-6 text-paper/75">
             Kazı, dolgu, yıkım ve moloz nakliyesi. Kepçe, ekskavatör, loder ve kamyon aynı programda.
           </p>
@@ -147,8 +151,10 @@ export function Footer() {
           </ul>
         </div>
         <div>
-          <p className="text-xs font-semibold tracking-[0.16em] text-ochre uppercase">İletişim</p>
-          <div className="mt-3">
+          <div className="mt-0">
+            <OwnerPhone />
+          </div>
+          <div className="mt-4">
             <CompanyLines />
           </div>
         </div>

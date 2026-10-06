@@ -56,13 +56,12 @@ export function CompanyLines({ tone = "dark" }: { tone?: "dark" | "light" }) {
 
   if (companyIsEmpty(company)) {
     return (
-      <div className={`text-sm leading-6 ${muted}`}>
-        <p>Telefon, e-posta ve adres henüz yazılmadı.</p>
-        <p className="mt-2">Bu alanlar boş başlar. Numara uydurulmaz; firma kartından siz girersiniz.</p>
-        <Link href="/iletisim#firma" className={`mt-3 inline-block underline ${strong}`}>
-          Firma kartını doldur
+      <p className={`text-sm leading-6 ${muted}`}>
+        Adres ve vergi bilgisi firma kartından eklenebilir.{" "}
+        <Link href="/iletisim#firma" className={`underline ${strong}`}>
+          Kartı doldur
         </Link>
-      </div>
+      </p>
     );
   }
 
@@ -121,9 +120,9 @@ function CompanyForm({
   return (
     <section id="firma" className="rounded-xl bg-card p-5 ring-1 ring-foreground/10 sm:p-6">
       <p className="text-xs font-semibold tracking-[0.16em] text-clay uppercase">Firma kartı</p>
-      <h2 className="mt-2 text-2xl font-semibold">İletişim bilgisi sizde durur</h2>
+      <h2 className="mt-2 text-2xl font-semibold">Adres ve vergi kartı</h2>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
-        Telefon, adres, vergi dairesi ve VKN boş başlar. Buraya yazdığınız değer sitede ve fatura PDF’inde görünür. Başka bir numara konulmaz.
+        Sahip ve telefon sitede sabittir. Adres, e-posta, vergi dairesi ve VKN boş başlar; yazarsanız faturada düzenleyen bölümüne geçer.
       </p>
       {readError ? <p className="mt-3 text-sm text-destructive">{readError}</p> : null}
       <div className="mt-5 grid gap-4 sm:grid-cols-2">

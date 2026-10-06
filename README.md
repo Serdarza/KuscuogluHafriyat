@@ -7,7 +7,7 @@ Saha firması için statik site ve tarayıcıda çalışan saha defteri. Hafriya
 - Herkese açık sayfalar: ana sayfa, hizmetler, filo, işler, hakkımızda, iletişim.
 - `/panel` saha defteri: gelir, gider, mazot, aylık ve yıllık grafikler, şirket ve şahıs için hazırlanmış fatura PDF’i.
 
-Sunucu, hesap ve veritabanı yok. Defter, firma kartı ve teklif talepleri `localStorage` içindedir. Kayıtlar yalnızca o tarayıcıda durur. İletişim alanları boş başlar; telefon, adres, vergi dairesi ve VKN siz yazmadan gösterilmez. Grafiklerin boş kalmaması için ilk açılışta **örnek** kayıtlar yüklenir. Bunlar işaretlidir, silinebilir ve düzeltilebilir.
+Sunucu, hesap ve veritabanı yok. Defter, firma kartı ve teklif talepleri `localStorage` içindedir. Kayıtlar yalnızca o tarayıcıda durur. Sitede sahip Bedir Berk Kuşçu ve telefon 0553 108 48 54 yazar. Adres, vergi dairesi ve VKN firma kartına siz yazmadan gösterilmez. Grafiklerin boş kalmaması için ilk açılışta **örnek** kayıtlar yüklenir. Bunlar işaretlidir, silinebilir ve düzeltilebilir.
 
 İndirilen fatura hazırlanmış bir PDF’tir. GİB e-Fatura değildir.
 

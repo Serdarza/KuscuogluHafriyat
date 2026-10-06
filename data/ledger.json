@@ -10,6 +10,18 @@
   "ledger": {
     "incomes": [
       {
+        "id": "430b0af2-ecd6-47b8-8369-4732d67177cc",
+        "invoiceId": "035bde25-cc24-4a45-b4e6-1501ec951c8a",
+        "date": "2026-10-06",
+        "customerType": "sirket",
+        "name": "Serdar",
+        "jobType": "Serdar ",
+        "amount": 30000,
+        "vatRate": 20,
+        "paymentStatus": "beklemede",
+        "sample": false
+      },
+      {
         "id": "ornek-gelir-2025-01",
         "date": "2025-01-11",
         "customerType": "sirket",
@@ -1108,6 +1120,32 @@
         "sample": true
       }
     ],
-    "invoices": []
+    "invoices": [
+      {
+        "id": "035bde25-cc24-4a45-b4e6-1501ec951c8a",
+        "number": "KH-2026-10-06-01",
+        "date": "2026-10-06",
+        "jobStart": "2026-10-06",
+        "jobEnd": "2026-10-06",
+        "customerType": "sirket",
+        "unvan": "Serdar",
+        "adSoyad": "",
+        "tckn": "",
+        "address": "Serf",
+        "lines": [
+          {
+            "id": "1285c2a8-5f99-497f-95bc-4fee7755dae9",
+            "description": "Serdar ",
+            "quantity": 1,
+            "unit": "saat",
+            "unitPrice": 30000
+          }
+        ],
+        "vatRate": 20,
+        "paymentStatus": "beklemede",
+        "sample": false,
+        "phone": "6363"
+      }
+    ]
   }
 }

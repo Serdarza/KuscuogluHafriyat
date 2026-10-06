@@ -92,24 +92,15 @@ export async function downloadInvoicePdf(
     color: paper,
   });
 
-  pdf.setFillColor(246, 236, 214);
-  pdf.rect(14, 50, 182, 12, "F");
-  write(
-    "Hazırlanmış fatura PDF'idir. GİB e-Fatura belgesi değildir.",
-    18,
-    57.5,
-    { bold: true, size: 10, color: ink },
-  );
-
-  write("İş tarihi", 14, 70, { bold: true, size: 9, color: ochre });
+  write("İş tarihi", 14, 54, { bold: true, size: 9, color: ochre });
   const jobLabel = formatJobRange(invoice.jobStart, invoice.jobEnd);
   const jobLines = pdf.splitTextToSize(jobLabel, 182);
-  write(String(jobLines[0] ?? ""), 14, 76, { bold: true, size: 12 });
-  write("Fatura tarihi", 14, 86, { bold: true, size: 9, color: ochre });
-  write(formatSpokenDate(invoice.date), 14, 92, { bold: true, size: 12 });
+  write(String(jobLines[0] ?? ""), 14, 60, { bold: true, size: 12 });
+  write("Fatura tarihi", 14, 70, { bold: true, size: 9, color: ochre });
+  write(formatSpokenDate(invoice.date), 14, 76, { bold: true, size: 12 });
 
-  write("DÜZENLEYEN", 14, 104, { bold: true, size: 9, color: ochre });
-  write("MÜŞTERİ", 110, 104, { bold: true, size: 9, color: ochre });
+  write("DÜZENLEYEN", 14, 88, { bold: true, size: 9, color: ochre });
+  write("MÜŞTERİ", 110, 88, { bold: true, size: 9, color: ochre });
 
   const issuer = [
     orDash(company.unvan),
@@ -131,14 +122,14 @@ export async function downloadInvoicePdf(
 
   issuer.forEach((line, index) => {
     const wrapped = pdf.splitTextToSize(line, 84);
-    write(wrapped[0] ?? "", 14, 111 + index * 5.5, { size: 9 });
+    write(wrapped[0] ?? "", 14, 95 + index * 5.5, { size: 9 });
   });
   customer.forEach((line, index) => {
     const wrapped = pdf.splitTextToSize(line, 84);
-    write(wrapped[0] ?? "", 110, 111 + index * 5.5, { size: 9 });
+    write(wrapped[0] ?? "", 110, 95 + index * 5.5, { size: 9 });
   });
 
-  let y = 146;
+  let y = 130;
   pdf.setFillColor(ink[0], ink[1], ink[2]);
   pdf.rect(14, y, 182, 8, "F");
   write("Açıklama", 17, y + 5.4, { size: 9, color: paper, bold: true });
@@ -149,7 +140,7 @@ export async function downloadInvoicePdf(
   y += 12;
 
   invoice.lines.forEach((line, index) => {
-    if (y > 250) {
+    if (y > 248) {
       pdf.addPage();
       y = 20;
     }
@@ -182,12 +173,10 @@ export async function downloadInvoicePdf(
     y += strong ? 8 : 6;
   });
 
-  write(
-    "Bu çıktı tarayıcıda hazırlanmıştır. Resmî e-Fatura yerine geçmez.",
-    14,
-    282,
-    { size: 8, color: muted },
-  );
+  write("Hazırlanmış fatura PDF'idir. GİB e-Fatura belgesi değildir.", 14, 290, {
+    size: 8,
+    color: muted,
+  });
 
   const safeName = (invoice.number || "fatura").replace(/[\\/:*?"<>|]+/g, "-");
   pdf.save(`fatura-${safeName}.pdf`);

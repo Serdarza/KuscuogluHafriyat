@@ -3,7 +3,7 @@ import { PanelApp } from "@/components/panel/panel-app";
 
 export const metadata: Metadata = {
   title: "Saha defteri",
-  description: "Gelir, gider, mazot ve hazırlanmış fatura. Kayıtlar bu tarayıcıda kalır.",
+  description: "Gelir, gider, mazot ve hazırlanmış fatura. Defter GitHub deposuna yazılır.",
 };
 
 export default function PanelPage() {

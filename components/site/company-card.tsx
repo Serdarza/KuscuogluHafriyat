@@ -1,120 +1,32 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState, type InputHTMLAttributes } from "react";
+import { useState, type InputHTMLAttributes } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  COMPANY_EVENT,
-  companyIsEmpty,
-  emptyCompany,
-  readCompany,
-  writeCompany,
-} from "@/lib/storage";
+import { useLedger } from "@/components/panel/ledger-context";
+import { brand } from "@/lib/brand";
 import type { CompanyProfile } from "@/lib/types";
 
-function useCompany() {
-  const [company, setCompany] = useState<CompanyProfile | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const load = () => {
-      try {
-        setCompany(readCompany());
-        setError(null);
-      } catch {
-        setError("Firma kartı bu tarayıcıda okunamadı.");
-        setCompany(emptyCompany());
-      }
-    };
-    load();
-    window.addEventListener(COMPANY_EVENT, load);
-    window.addEventListener("storage", load);
-    return () => {
-      window.removeEventListener(COMPANY_EVENT, load);
-      window.removeEventListener("storage", load);
-    };
-  }, []);
-
-  return { company, setCompany, error, setError };
-}
-
-export function CompanyLines({ tone = "dark" }: { tone?: "dark" | "light" }) {
-  const { company, error } = useCompany();
-  const muted = tone === "dark" ? "text-paper/70" : "text-muted-foreground";
-  const strong = tone === "dark" ? "text-paper" : "text-foreground";
-
-  if (!company) {
-    return <p className={`text-sm ${muted}`}>İletişim bilgisi yükleniyor…</p>;
-  }
-
-  if (error) {
-    return <p className="text-sm text-ochre">{error}</p>;
-  }
-
-  if (companyIsEmpty(company)) {
-    return (
-      <p className={`text-sm leading-6 ${muted}`}>
-        Adres ve vergi bilgisi firma kartından eklenebilir.{" "}
-        <Link href="/iletisim#firma" className={`underline ${strong}`}>
-          Kartı doldur
-        </Link>
-      </p>
-    );
-  }
-
-  return (
-    <div className={`grid gap-1 text-sm ${strong}`}>
-      {company.unvan ? <p className="font-semibold">{company.unvan}</p> : null}
-      {company.phone ? <p>{company.phone}</p> : null}
-      {company.email ? <p>{company.email}</p> : null}
-      {company.address || company.city ? (
-        <p>{[company.address, company.city].filter(Boolean).join(", ")}</p>
-      ) : null}
-    </div>
-  );
-}
-
 export function CompanyCard() {
-  const { company, error } = useCompany();
-
-  if (!company) {
-    return (
-      <div className="rounded-xl bg-card p-5 ring-1 ring-foreground/10">
-        <p className="text-sm text-muted-foreground">Firma kartı yükleniyor…</p>
-      </div>
-    );
-  }
-
-  return <CompanyForm initial={company} readError={error} />;
+  const { company, saveCompany } = useLedger();
+  return <CompanyForm initial={company} onSave={saveCompany} />;
 }
 
 function CompanyForm({
   initial,
-  readError,
+  onSave,
 }: {
   initial: CompanyProfile;
-  readError: string | null;
+  onSave: (company: CompanyProfile) => void;
 }) {
   const [draft, setDraft] = useState(initial);
   const [notice, setNotice] = useState<string | null>(null);
-  const [saveError, setSaveError] = useState<string | null>(null);
 
   const update = (key: keyof CompanyProfile, value: string) => {
     setDraft({ ...draft, [key]: value });
     setNotice(null);
-  };
-
-  const save = () => {
-    try {
-      writeCompany(draft);
-      setSaveError(null);
-      setNotice("Firma kartı bu tarayıcıya yazıldı.");
-    } catch {
-      setSaveError("Kayıt yazılamadı. Tarayıcı depolaması kapalı olabilir.");
-    }
   };
 
   return (
@@ -122,9 +34,8 @@ function CompanyForm({
       <p className="text-xs font-semibold tracking-[0.16em] text-clay uppercase">Firma kartı</p>
       <h2 className="mt-2 text-2xl font-semibold">Adres ve vergi kartı</h2>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
-        Sahip ve telefon sitede sabittir. Adres, e-posta, vergi dairesi ve VKN boş başlar; yazarsanız faturada düzenleyen bölümüne geçer.
+        Sahip {brand.owner} ve telefon {brand.phoneDisplay} fatura başlığında sabit. Adres, e-posta, vergi dairesi ve VKN boş başlar; yazarsanız düzenleyen bölümüne geçer.
       </p>
-      {readError ? <p className="mt-3 text-sm text-destructive">{readError}</p> : null}
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
         <Field label="Ünvan" value={draft.unvan} onChange={(value) => update("unvan", value)} />
         <Field label="Telefon" value={draft.phone} onChange={(value) => update("phone", value)} />
@@ -139,19 +50,21 @@ function CompanyForm({
             onChange={(event) => update("address", event.target.value)}
           />
         </div>
-        <Field
-          label="Vergi dairesi"
-          value={draft.vergiDairesi}
-          onChange={(value) => update("vergiDairesi", value)}
-        />
+        <Field label="Vergi dairesi" value={draft.vergiDairesi} onChange={(value) => update("vergiDairesi", value)} />
         <Field label="VKN" value={draft.vkn} onChange={(value) => update("vkn", value)} inputMode="numeric" />
       </div>
       <div className="mt-5 flex flex-wrap items-center gap-3">
-        <Button type="button" className="h-10 px-4" onClick={save}>
+        <Button
+          type="button"
+          className="h-10 px-4"
+          onClick={() => {
+            onSave(draft);
+            setNotice("Firma kartı deftere yazıldı.");
+          }}
+        >
           Kartı kaydet
         </Button>
         {notice ? <p className="text-sm text-clay">{notice}</p> : null}
-        {saveError ? <p className="text-sm text-destructive">{saveError}</p> : null}
       </div>
     </section>
   );

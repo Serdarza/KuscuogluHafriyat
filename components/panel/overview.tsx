@@ -6,10 +6,14 @@ import { MonthlyChart, YearlyChart } from "@/components/panel/charts";
 import { useLedger } from "@/components/panel/ledger-context";
 import {
   MONTHS_SHORT,
+  PAYMENT_LABEL,
   chartYear,
+  formatDate,
   formatNumber,
   formatTry,
   inPeriod,
+  invoiceGross,
+  todayIso,
   withVat,
 } from "@/lib/format";
 import type { PeriodFilter } from "@/lib/types";
@@ -18,7 +22,13 @@ function sum(values: number[]) {
   return values.reduce((total, value) => total + value, 0);
 }
 
-export function Overview({ filter }: { filter: PeriodFilter }) {
+export function Overview({
+  filter,
+  onOpen,
+}: {
+  filter: PeriodFilter;
+  onOpen: (section: "gelir" | "faturalar") => void;
+}) {
   const { ledger, removeSamples } = useLedger();
   const year = chartYear(filter);
 
@@ -71,6 +81,18 @@ export function Overview({ filter }: { filter: PeriodFilter }) {
     });
   }, [ledger]);
 
+  const today = todayIso();
+  const unpaidInvoices = ledger.invoices
+    .filter((row) => row.paymentStatus !== "odendi")
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const overdueInvoices = unpaidInvoices.filter((row) => row.date < today);
+  const unpaidIncome = ledger.incomes
+    .filter((row) => row.paymentStatus !== "odendi")
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const missingInvoice = ledger.incomes
+    .filter((row) => !row.invoiceId)
+    .sort((a, b) => a.date.localeCompare(b.date));
+
   const sampleCount =
     ledger.incomes.filter((row) => row.sample).length +
     ledger.expenses.filter((row) => row.sample).length +
@@ -104,6 +126,64 @@ export function Overview({ filter }: { filter: PeriodFilter }) {
         </p>
         <YearlyChart data={yearly} />
       </section>
+      <section className="grid gap-3">
+        <div>
+          <h2 className="text-lg font-semibold">Hatırlatma</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Ödenmemiş ve gecikmiş faturalar, bekleyen gelir ve faturası kesilmemiş işler. Liste tüm deftere bakar, seçili aya kilitli değildir.
+          </p>
+        </div>
+        <div className="grid gap-3 lg:grid-cols-2">
+          <ReminderCard
+            title="Ödenmemiş faturalar"
+            empty="Ödenmemiş fatura yok."
+            action="Faturalara git"
+            onAction={() => onOpen("faturalar")}
+            rows={unpaidInvoices.map((row) => ({
+              id: row.id,
+              title: row.customerType === "sirket" ? row.unvan || row.number : row.adSoyad || row.number,
+              meta: `${row.number} · ${formatDate(row.date)} · ${PAYMENT_LABEL[row.paymentStatus]}${row.date < today ? " · Gecikti" : ""}${row.sample ? " · Örnek" : ""}`,
+              amount: formatTry(invoiceGross(row)),
+            }))}
+          />
+          <ReminderCard
+            title="Gecikmiş faturalar"
+            empty="Vadesi geçmiş ödenmemiş fatura yok."
+            action="Faturalara git"
+            onAction={() => onOpen("faturalar")}
+            rows={overdueInvoices.map((row) => ({
+              id: row.id,
+              title: row.customerType === "sirket" ? row.unvan || row.number : row.adSoyad || row.number,
+              meta: `${row.number} · ${formatDate(row.date)} · ${PAYMENT_LABEL[row.paymentStatus]}${row.sample ? " · Örnek" : ""}`,
+              amount: formatTry(invoiceGross(row)),
+            }))}
+          />
+          <ReminderCard
+            title="Ödenmemiş gelir"
+            empty="Bekleyen gelir yok."
+            action="Gelire git"
+            onAction={() => onOpen("gelir")}
+            rows={unpaidIncome.map((row) => ({
+              id: row.id,
+              title: row.name,
+              meta: `${formatDate(row.date)} · ${row.jobType} · ${PAYMENT_LABEL[row.paymentStatus]}${row.sample ? " · Örnek" : ""}`,
+              amount: formatTry(withVat(row.amount, row.vatRate)),
+            }))}
+          />
+          <ReminderCard
+            title="Fatura vermeyen"
+            empty="Faturaya bağlanmamış gelir yok."
+            action="Gelire git"
+            onAction={() => onOpen("gelir")}
+            rows={missingInvoice.map((row) => ({
+              id: row.id,
+              title: row.name,
+              meta: `${formatDate(row.date)} · ${row.jobType}${row.paymentStatus !== "odendi" ? " · Ödenmedi" : ""}${row.sample ? " · Örnek" : ""}`,
+              amount: formatTry(withVat(row.amount, row.vatRate)),
+            }))}
+          />
+        </div>
+      </section>
       {sampleCount > 0 ? (
         <div className="flex flex-col items-start justify-between gap-3 rounded-xl border border-dashed border-clay/40 bg-card px-4 py-4 sm:flex-row sm:items-center">
           <p className="text-sm">
@@ -115,6 +195,49 @@ export function Overview({ filter }: { filter: PeriodFilter }) {
         </div>
       ) : null}
     </div>
+  );
+}
+
+function ReminderCard({
+  title,
+  empty,
+  rows,
+  action,
+  onAction,
+}: {
+  title: string;
+  empty: string;
+  action: string;
+  onAction: () => void;
+  rows: Array<{ id: string; title: string; meta: string; amount: string }>;
+}) {
+  return (
+    <article className="rounded-xl bg-card p-4 ring-1 ring-foreground/10">
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="font-semibold">
+          {title}
+          <span className="ml-2 text-sm font-medium text-clay">{rows.length}</span>
+        </h3>
+        <Button type="button" variant="ghost" size="sm" onClick={onAction}>
+          {action}
+        </Button>
+      </div>
+      {rows.length === 0 ? (
+        <p className="mt-3 text-sm text-muted-foreground">{empty}</p>
+      ) : (
+        <ul className="mt-3 max-h-72 space-y-2 overflow-y-auto">
+          {rows.map((row) => (
+            <li key={row.id} className="border-t border-border pt-2 text-sm">
+              <div className="flex items-start justify-between gap-3">
+                <p className="font-medium">{row.title}</p>
+                <p className="shrink-0 font-semibold">{row.amount}</p>
+              </div>
+              <p className="text-xs text-muted-foreground">{row.meta}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </article>
   );
 }
 

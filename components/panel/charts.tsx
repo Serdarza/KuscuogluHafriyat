@@ -50,16 +50,25 @@ export function MonthlyChart({
     );
   }
   return (
-    <div className="h-72 w-full">
+    <div className="h-64 w-full min-w-0 sm:h-72">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+        <BarChart data={data} margin={{ top: 8, right: 4, left: 0, bottom: 8 }}>
           <CartesianGrid stroke="#e4dccf" vertical={false} />
-          <XAxis dataKey="label" tick={{ fill: "#5e564c", fontSize: 12 }} axisLine={false} tickLine={false} />
-          <YAxis
-            tick={{ fill: "#5e564c", fontSize: 11 }}
+          <XAxis
+            dataKey="label"
+            interval={0}
+            tick={{ fill: "#5e564c", fontSize: 10 }}
             axisLine={false}
             tickLine={false}
-            width={56}
+            angle={-40}
+            textAnchor="end"
+            height={46}
+          />
+          <YAxis
+            tick={{ fill: "#5e564c", fontSize: 10 }}
+            axisLine={false}
+            tickLine={false}
+            width={44}
             tickFormatter={(value: number) =>
               new Intl.NumberFormat("tr-TR", { notation: "compact", maximumFractionDigits: 1 }).format(value)
             }
@@ -87,16 +96,16 @@ export function YearlyChart({
     );
   }
   return (
-    <div className="h-72 w-full">
+    <div className="h-64 w-full min-w-0 sm:h-72">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+        <LineChart data={data} margin={{ top: 8, right: 4, left: 0, bottom: 0 }}>
           <CartesianGrid stroke="#e4dccf" vertical={false} />
-          <XAxis dataKey="label" tick={{ fill: "#5e564c", fontSize: 12 }} axisLine={false} tickLine={false} />
+          <XAxis dataKey="label" tick={{ fill: "#5e564c", fontSize: 11 }} axisLine={false} tickLine={false} />
           <YAxis
-            tick={{ fill: "#5e564c", fontSize: 11 }}
+            tick={{ fill: "#5e564c", fontSize: 10 }}
             axisLine={false}
             tickLine={false}
-            width={56}
+            width={44}
             tickFormatter={(value: number) =>
               new Intl.NumberFormat("tr-TR", { notation: "compact", maximumFractionDigits: 1 }).format(value)
             }

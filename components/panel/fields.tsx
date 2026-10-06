@@ -25,15 +25,17 @@ export function Field({
   children,
   error,
   hint,
+  htmlFor,
 }: {
   label: string;
   children: ReactNode;
   error?: string;
   hint?: string;
+  htmlFor?: string;
 }) {
   return (
     <div className="grid gap-1.5">
-      <Label>{label}</Label>
+      <Label htmlFor={htmlFor}>{label}</Label>
       {children}
       {error ? <p className="text-xs text-destructive">{error}</p> : null}
       {!error && hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
@@ -60,7 +62,7 @@ export function TextField({
 }) {
   const id = useId();
   return (
-    <Field label={label} error={error} hint={hint}>
+    <Field label={label} error={error} hint={hint} htmlFor={id}>
       <Input
         id={id}
         className="h-10"

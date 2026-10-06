@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
   images: { unoptimized: true },
   trailingSlash: true,
   allowedDevOrigins: ["127.0.0.1"],
+  devIndicators: { position: "top-right" },
   ...(basePath
     ? {
         basePath,

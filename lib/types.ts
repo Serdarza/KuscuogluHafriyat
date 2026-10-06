@@ -18,6 +18,8 @@ export type Income = {
   amount: number;
   vatRate: number;
   paymentStatus: PaymentStatus;
+  /** Set when this row was posted from a fatura. */
+  invoiceId?: string;
   sample: boolean;
 };
 
@@ -62,6 +64,7 @@ export type Invoice = {
   address: string;
   lines: InvoiceLine[];
   vatRate: number;
+  paymentStatus: PaymentStatus;
   sample: boolean;
 };
 

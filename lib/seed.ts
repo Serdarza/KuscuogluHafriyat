@@ -149,6 +149,7 @@ export function seedLedger(): Ledger {
         },
       ],
       vatRate: 20,
+      paymentStatus: "beklemede",
       sample: true,
     },
   ];

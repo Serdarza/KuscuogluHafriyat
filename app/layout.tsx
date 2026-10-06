@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import type { ReactNode } from "react";
 import { Barlow_Condensed, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
     template: "%s · Kuşçuoğlu Hafriyat",
   },
   description:
-    "Temel ve kanal kazısı, dolgu, yıkım, moloz nakliyesi ve saha düzenleme. Kepçe, ekskavatör, loder ve kamyon aynı ekipte.",
+    "Kuşçuoğlu Hafriyat saha defteri. Gelir, gider, mazot, grafikler ve hazırlanmış fatura.",
   applicationName: "Kuşçuoğlu Hafriyat",
 };
 
@@ -32,7 +33,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="tr" className={`${source.variable} ${barlow.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>

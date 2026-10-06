@@ -120,7 +120,10 @@ export function IncomeDesk({ filter }: { filter: PeriodFilter }) {
                   <span className="mr-2 text-muted-foreground">{CUSTOMER_LABEL[row.customerType]}</span>
                   {row.name} <SampleBadge sample={row.sample} />
                 </td>
-                <td className="px-3 py-3">{row.jobType}</td>
+                <td className="px-3 py-3">
+                  {row.jobType}
+                  {row.invoiceId ? <span className="block text-xs text-muted-foreground">Faturaya bağlı</span> : null}
+                </td>
                 <td className="px-3 py-3">
                   {formatTry(withVat(row.amount, row.vatRate))}
                   <span className="block text-xs text-muted-foreground">KDV %{row.vatRate}</span>
@@ -145,7 +148,10 @@ export function IncomeDesk({ filter }: { filter: PeriodFilter }) {
               <SampleBadge sample={row.sample} />
             </div>
             <p className="mt-2 font-display text-3xl">{formatTry(withVat(row.amount, row.vatRate))}</p>
-            <p className="text-xs text-muted-foreground">{PAYMENT_LABEL[row.paymentStatus]} · {CUSTOMER_LABEL[row.customerType]}</p>
+            <p className="text-xs text-muted-foreground">
+              {PAYMENT_LABEL[row.paymentStatus]} · {CUSTOMER_LABEL[row.customerType]}
+              {row.invoiceId ? " · Faturaya bağlı" : ""}
+            </p>
             <div className="mt-3">
               <RowActions onEdit={() => { setEditing(row); setError(null); setOpen(true); }} onDelete={() => setRemoveId(row.id)} />
             </div>

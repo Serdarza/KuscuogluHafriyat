@@ -18,6 +18,7 @@ import { useLedger } from "@/components/panel/ledger-context";
 import {
   CUSTOMER_LABEL,
   UNITS,
+  PAYMENT_LABEL,
   VAT_RATES,
   formatDate,
   formatTry,
@@ -29,7 +30,7 @@ import {
   newId,
 } from "@/lib/format";
 import { downloadInvoicePdf } from "@/lib/pdf";
-import type { Invoice, InvoiceLine, PeriodFilter } from "@/lib/types";
+import type { Invoice, InvoiceLine, PaymentStatus, PeriodFilter } from "@/lib/types";
 
 function emptyLine(): InvoiceLine {
   return { id: newId(), description: "", quantity: 1, unit: "m³", unitPrice: 0 };
@@ -50,12 +51,13 @@ function blankInvoice(filter: PeriodFilter): Invoice {
     address: "",
     lines: [emptyLine()],
     vatRate: 20,
+    paymentStatus: "beklemede",
     sample: false,
   };
 }
 
 export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
-  const { ledger, company, addInvoice, updateInvoice, deleteInvoice, addIncome } = useLedger();
+  const { ledger, company, saveInvoice, deleteInvoice } = useLedger();
   const rows = ledger.invoices
     .filter((row) => inPeriod(row.date, filter))
     .sort((a, b) => b.date.localeCompare(a.date));
@@ -105,20 +107,7 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
       lines,
       sample: false,
     };
-    if (editing.id) updateInvoice(row);
-    else addInvoice(row);
-    if (postIncome) {
-      addIncome({
-        date: row.date,
-        customerType: row.customerType,
-        name: row.customerType === "sirket" ? row.unvan : row.adSoyad,
-        jobType: row.lines[0]?.description || "Fatura",
-        amount: invoiceSubtotal(row),
-        vatRate: row.vatRate,
-        paymentStatus: "beklemede",
-        sample: false,
-      });
-    }
+    saveInvoice(row, { postIncome });
     setOpen(false);
   };
 
@@ -165,7 +154,7 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
                     {invoice.customerType === "sirket" ? invoice.unvan || "Ünvan yok" : invoice.adSoyad || "Ad yok"}
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    {formatDate(invoice.date)} · {CUSTOMER_LABEL[invoice.customerType]} · KDV %{invoice.vatRate}
+                    {formatDate(invoice.date)} · {CUSTOMER_LABEL[invoice.customerType]} · KDV %{invoice.vatRate} · {PAYMENT_LABEL[invoice.paymentStatus]}
                   </p>
                 </div>
                 <p className="font-display text-4xl leading-none">{formatTry(invoiceGross(invoice))}</p>
@@ -225,12 +214,25 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
                 </div>
               )}
               <TextField label="Adres" value={editing.address} onChange={(address) => setEditing({ ...editing, address })} />
-              <FieldSelect
-                label="KDV"
-                value={String(editing.vatRate)}
-                onChange={(vatRate) => setEditing({ ...editing, vatRate: Number(vatRate) })}
-                options={VAT_RATES.map((rate) => ({ value: String(rate), label: `%${rate}` }))}
-              />
+              <div className="grid gap-3 sm:grid-cols-2">
+                <FieldSelect
+                  label="KDV"
+                  value={String(editing.vatRate)}
+                  onChange={(vatRate) => setEditing({ ...editing, vatRate: Number(vatRate) })}
+                  options={VAT_RATES.map((rate) => ({ value: String(rate), label: `%${rate}` }))}
+                />
+                <FieldSelect
+                  label="Ödeme"
+                  value={editing.paymentStatus}
+                  onChange={(paymentStatus) =>
+                    setEditing({ ...editing, paymentStatus: paymentStatus as PaymentStatus })
+                  }
+                  options={(Object.keys(PAYMENT_LABEL) as PaymentStatus[]).map((status) => ({
+                    value: status,
+                    label: PAYMENT_LABEL[status],
+                  }))}
+                />
+              </div>
               <div className="grid gap-3">
                 <p className="text-sm font-medium">Kalemler</p>
                 {editing.lines.map((line) => {
@@ -325,13 +327,16 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
                 </ul>
               </div>
               <Field label="Gelire de işle">
-                <label className="flex items-center gap-2 text-sm">
+                <label className="flex items-start gap-2 text-sm">
                   <input
                     type="checkbox"
+                    className="mt-1"
                     checked={postIncome}
                     onChange={(event) => setPostIncome(event.target.checked)}
                   />
-                  Kaydedince KDV hariç tutarı gelir defterine bekleyen olarak yaz
+                  <span>
+                    Fatura önce listeye yazılır. İşaretlerseniz KDV hariç tutar, bu faturanın numarasıyla gelir defterine bekleyen olarak eklenir. Aynı fatura için ikinci gelir satırı açılmaz.
+                  </span>
                 </label>
               </Field>
             </div>

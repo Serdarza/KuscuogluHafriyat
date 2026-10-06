@@ -32,9 +32,9 @@ function CompanyForm({
   return (
     <section id="firma" className="rounded-xl bg-card p-5 ring-1 ring-foreground/10 sm:p-6">
       <p className="text-xs font-semibold tracking-[0.16em] text-clay uppercase">Firma kartı</p>
-      <h2 className="mt-2 text-2xl font-semibold">Adres ve vergi kartı</h2>
+      <h2 className="mt-2 text-2xl font-semibold">Adres kartı</h2>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
-        Sahip {brand.owner} ve telefon {brand.phoneDisplay} fatura başlığında sabit. Adres, e-posta, vergi dairesi ve VKN boş başlar; yazarsanız düzenleyen bölümüne geçer.
+        Sahip {brand.owner} ve telefon {brand.phoneDisplay} fatura başlığında sabit. Ünvan, adres ve e-posta yazarsanız düzenleyen bölümüne geçer.
       </p>
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
         <Field label="Ünvan" value={draft.unvan} onChange={(value) => update("unvan", value)} />
@@ -50,8 +50,6 @@ function CompanyForm({
             onChange={(event) => update("address", event.target.value)}
           />
         </div>
-        <Field label="Vergi dairesi" value={draft.vergiDairesi} onChange={(value) => update("vergiDairesi", value)} />
-        <Field label="VKN" value={draft.vkn} onChange={(value) => update("vkn", value)} inputMode="numeric" />
       </div>
       <div className="mt-5 flex flex-wrap items-center gap-3">
         <Button

@@ -19,8 +19,6 @@ export function emptyCompany(): CompanyProfile {
     address: "",
     city: "",
     unvan: "",
-    vergiDairesi: "",
-    vkn: "",
   };
 }
 
@@ -147,14 +145,16 @@ function normalizeInvoice(value: unknown): Invoice | null {
   const row = value as Partial<Invoice>;
   if (typeof row.id !== "string" || typeof row.date !== "string") return null;
   const lines = Array.isArray(row.lines) ? row.lines.map(normalizeLine).filter((line) => line !== null) : [];
+  const jobStart = text(row.jobStart) || row.date;
+  const jobEnd = text(row.jobEnd) || jobStart;
   return {
     id: row.id,
     number: text(row.number),
     date: row.date,
+    jobStart,
+    jobEnd,
     customerType: customer(row.customerType),
     unvan: text(row.unvan),
-    vergiDairesi: text(row.vergiDairesi),
-    vkn: text(row.vkn),
     adSoyad: text(row.adSoyad),
     tckn: text(row.tckn),
     address: text(row.address),
@@ -187,8 +187,6 @@ function normalizeCompany(value: unknown): CompanyProfile {
     address: text(row.address),
     city: text(row.city),
     unvan: text(row.unvan),
-    vergiDairesi: text(row.vergiDairesi),
-    vkn: text(row.vkn),
   };
 }
 

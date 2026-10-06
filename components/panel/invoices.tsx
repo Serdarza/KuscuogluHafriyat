@@ -21,7 +21,9 @@ import {
   PAYMENT_LABEL,
   VAT_RATES,
   formatDate,
+  formatJobRange,
   formatTry,
+  todayIso,
   inPeriod,
   invoiceGross,
   invoiceSubtotal,
@@ -36,16 +38,16 @@ function emptyLine(): InvoiceLine {
   return { id: newId(), description: "", quantity: 1, unit: "m³", unitPrice: 0 };
 }
 
-function blankInvoice(filter: PeriodFilter): Invoice {
-  const year = filter.mode === "month" ? filter.month.slice(0, 4) : filter.year;
+function blankInvoice(): Invoice {
+  const today = todayIso();
   return {
     id: "",
-    number: `KH-${year}-${String(Date.now()).slice(-4)}`,
-    date: filter.mode === "month" ? `${filter.month}-01` : new Date().toISOString().slice(0, 10),
+    number: `KH-${today.slice(0, 4)}-${String(Date.now()).slice(-4)}`,
+    date: today,
+    jobStart: today,
+    jobEnd: today,
     customerType: "sirket",
     unvan: "",
-    vergiDairesi: "",
-    vkn: "",
     adSoyad: "",
     tckn: "",
     address: "",
@@ -78,16 +80,16 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
 
   const save = () => {
     if (!editing) return;
-    if (!editing.date) return setError("Tarih gerekli.");
+    if (!editing.date) return setError("Fatura tarihi gerekli.");
+    if (!editing.jobStart) return setError("İş başlangıç gerekli.");
+    if (!editing.jobEnd) return setError("İş bitiş gerekli.");
+    if (editing.jobEnd < editing.jobStart) return setError("İş bitiş, iş başlangıçtan önce olamaz. Aynı gün olabilir.");
     if (!editing.number.trim()) return setError("Fatura numarası yazın.");
     if (editing.customerType === "sirket" && editing.unvan.trim().length < 2) {
       return setError("Şirket ünvanı yazın.");
     }
     if (editing.customerType === "sahis" && editing.adSoyad.trim().length < 2) {
       return setError("Ad soyad yazın.");
-    }
-    if (editing.vkn.trim() && !/^\d{10}$/.test(editing.vkn.trim())) {
-      return setError("VKN 10 hane olmalı. Boş bırakılırsa PDF’te çizgi çıkar.");
     }
     if (editing.tckn.trim() && !/^\d{11}$/.test(editing.tckn.trim())) {
       return setError("TCKN 11 hane olmalı. Boş bırakılırsa PDF’te çizgi çıkar.");
@@ -99,8 +101,6 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
       ...editing,
       number: editing.number.trim(),
       unvan: editing.unvan.trim(),
-      vergiDairesi: editing.vergiDairesi.trim(),
-      vkn: editing.vkn.trim(),
       adSoyad: editing.adSoyad.trim(),
       tckn: editing.tckn.trim(),
       address: editing.address.trim(),
@@ -129,10 +129,10 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
         <div>
           <h2 className="text-xl font-semibold">Faturalar</h2>
           <p className="text-sm text-muted-foreground">
-            Şirket ya da şahıs için hazırlanmış fatura PDF’i. GİB e-Fatura değildir. Vergi numarası uydurulmaz; boşsa belgede çizgi durur.
+            Şirket ya da şahıs için hazırlanmış fatura PDF’i. GİB e-Fatura değildir. Liste fatura tarihine göre süzülür; iş tarihi ayrıdır.
           </p>
         </div>
-        <Button type="button" className="h-10 px-4" onClick={() => openEditor(blankInvoice(filter))}>
+        <Button type="button" className="h-10 px-4" onClick={() => openEditor(blankInvoice())}>
           Fatura hazırla
         </Button>
       </div>
@@ -154,7 +154,10 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
                     {invoice.customerType === "sirket" ? invoice.unvan || "Ünvan yok" : invoice.adSoyad || "Ad yok"}
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    {formatDate(invoice.date)} · {CUSTOMER_LABEL[invoice.customerType]} · KDV %{invoice.vatRate} · {PAYMENT_LABEL[invoice.paymentStatus]}
+                    Fatura tarihi {formatDate(invoice.date)} · İş tarihi {formatJobRange(invoice.jobStart, invoice.jobEnd)}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {CUSTOMER_LABEL[invoice.customerType]} · KDV %{invoice.vatRate} · {PAYMENT_LABEL[invoice.paymentStatus]}
                   </p>
                 </div>
                 <p className="font-display text-4xl leading-none">{formatTry(invoiceGross(invoice))}</p>
@@ -186,10 +189,33 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
           </DialogHeader>
           {editing ? (
             <div className="grid gap-4">
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid gap-3 sm:grid-cols-2">
                 <TextField label="Fatura no" value={editing.number} onChange={(number) => setEditing({ ...editing, number })} />
-                <TextField label="Tarih" type="date" value={editing.date} onChange={(date) => setEditing({ ...editing, date })} />
-                <FieldSelect
+                <TextField
+                  label="Fatura tarihi"
+                  type="date"
+                  value={editing.date}
+                  onChange={(date) => setEditing({ ...editing, date })}
+                  hint="Varsayılan bugün. İş bitişine bağlanmaz."
+                />
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <TextField
+                  label="İş başlangıç"
+                  type="date"
+                  value={editing.jobStart}
+                  onChange={(jobStart) => setEditing({ ...editing, jobStart })}
+                  hint="İşin ilk günü."
+                />
+                <TextField
+                  label="İş bitiş"
+                  type="date"
+                  value={editing.jobEnd}
+                  onChange={(jobEnd) => setEditing({ ...editing, jobEnd })}
+                  hint="Aynı gün olabilir. Birkaç günü de kapsar."
+                />
+              </div>
+              <FieldSelect
                   label="Müşteri tipi"
                   value={editing.customerType}
                   onChange={(customerType) =>
@@ -200,13 +226,8 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
                     { value: "sahis", label: "Şahıs" },
                   ]}
                 />
-              </div>
               {editing.customerType === "sirket" ? (
-                <div className="grid gap-3 sm:grid-cols-3">
-                  <TextField label="Ünvan" value={editing.unvan} onChange={(unvan) => setEditing({ ...editing, unvan })} />
-                  <TextField label="Vergi dairesi" value={editing.vergiDairesi} onChange={(vergiDairesi) => setEditing({ ...editing, vergiDairesi })} />
-                  <TextField label="VKN" value={editing.vkn} onChange={(vkn) => setEditing({ ...editing, vkn })} hint="10 hane. Boş kalabilir." inputMode="numeric" />
-                </div>
+                <TextField label="Ünvan" value={editing.unvan} onChange={(unvan) => setEditing({ ...editing, unvan })} />
               ) : (
                 <div className="grid gap-3 sm:grid-cols-2">
                   <TextField label="Ad soyad" value={editing.adSoyad} onChange={(adSoyad) => setEditing({ ...editing, adSoyad })} />

@@ -1,6 +1,7 @@
 import { jsPDF } from "jspdf";
 import {
-  formatDate,
+  formatJobRange,
+  formatSpokenDate,
   formatTry,
   invoiceGross,
   invoiceSubtotal,
@@ -84,14 +85,9 @@ export async function downloadInvoicePdf(
 
   write(brand.owner, 44, 18, { bold: true, size: 13, color: paper });
   write(brand.phoneDisplay, 44, 26, { size: 12, color: ochre });
-  write("FATURA", 196, 16, { bold: true, size: 16, align: "right", color: paper });
-  write(invoice.number || "Numarasız", 196, 24, {
-    size: 10,
-    align: "right",
-    color: paper,
-  });
-  write(formatDate(invoice.date), 196, 31, {
-    size: 10,
+  write("FATURA", 196, 18, { bold: true, size: 16, align: "right", color: paper });
+  write(invoice.number || "Numarasız", 196, 26, {
+    size: 11,
     align: "right",
     color: paper,
   });
@@ -105,14 +101,19 @@ export async function downloadInvoicePdf(
     { bold: true, size: 10, color: ink },
   );
 
-  write("DÜZENLEYEN", 14, 72, { bold: true, size: 9, color: ochre });
-  write("MÜŞTERİ", 110, 72, { bold: true, size: 9, color: ochre });
+  write("İş tarihi", 14, 70, { bold: true, size: 9, color: ochre });
+  const jobLabel = formatJobRange(invoice.jobStart, invoice.jobEnd);
+  const jobLines = pdf.splitTextToSize(jobLabel, 182);
+  write(String(jobLines[0] ?? ""), 14, 76, { bold: true, size: 12 });
+  write("Fatura tarihi", 14, 86, { bold: true, size: 9, color: ochre });
+  write(formatSpokenDate(invoice.date), 14, 92, { bold: true, size: 12 });
+
+  write("DÜZENLEYEN", 14, 104, { bold: true, size: 9, color: ochre });
+  write("MÜŞTERİ", 110, 104, { bold: true, size: 9, color: ochre });
 
   const issuer = [
     orDash(company.unvan),
     `Yetkili: ${brand.owner}`,
-    company.vergiDairesi.trim() ? `Vergi dairesi: ${company.vergiDairesi.trim()}` : "Vergi dairesi: —",
-    company.vkn.trim() ? `VKN: ${company.vkn.trim()}` : "VKN: —",
     orDash([company.address, company.city].filter((part) => part.trim()).join(", ")),
     `Telefon: ${company.phone.trim() || brand.phoneDisplay}`,
     company.email.trim() ? company.email.trim() : "E-posta: —",
@@ -120,15 +121,7 @@ export async function downloadInvoicePdf(
 
   const customer =
     invoice.customerType === "sirket"
-      ? [
-          orDash(invoice.unvan),
-          invoice.vergiDairesi.trim()
-            ? `Vergi dairesi: ${invoice.vergiDairesi.trim()}`
-            : "Vergi dairesi: —",
-          invoice.vkn.trim() ? `VKN: ${invoice.vkn.trim()}` : "VKN: —",
-          orDash(invoice.address),
-          "Müşteri tipi: Şirket",
-        ]
+      ? [orDash(invoice.unvan), orDash(invoice.address), "Müşteri tipi: Şirket"]
       : [
           orDash(invoice.adSoyad),
           invoice.tckn.trim() ? `TCKN: ${invoice.tckn.trim()}` : "TCKN: —",
@@ -138,14 +131,14 @@ export async function downloadInvoicePdf(
 
   issuer.forEach((line, index) => {
     const wrapped = pdf.splitTextToSize(line, 84);
-    write(wrapped[0] ?? "", 14, 79 + index * 5.5, { size: 9 });
+    write(wrapped[0] ?? "", 14, 111 + index * 5.5, { size: 9 });
   });
   customer.forEach((line, index) => {
     const wrapped = pdf.splitTextToSize(line, 84);
-    write(wrapped[0] ?? "", 110, 79 + index * 5.5, { size: 9 });
+    write(wrapped[0] ?? "", 110, 111 + index * 5.5, { size: 9 });
   });
 
-  let y = 122;
+  let y = 146;
   pdf.setFillColor(ink[0], ink[1], ink[2]);
   pdf.rect(14, y, 182, 8, "F");
   write("Açıklama", 17, y + 5.4, { size: 9, color: paper, bold: true });
@@ -190,7 +183,7 @@ export async function downloadInvoicePdf(
   });
 
   write(
-    "Bu çıktı tarayıcıda hazırlanmıştır. Resmî e-Fatura yerine geçmez. Vergi dairesi, VKN ve TCKN alanları siz doldurmadıysanız boş bırakılır.",
+    "Bu çıktı tarayıcıda hazırlanmıştır. Resmî e-Fatura yerine geçmez.",
     14,
     282,
     { size: 8, color: muted },

@@ -130,7 +130,7 @@ export function Overview({
         <div>
           <h2 className="text-lg font-semibold">Hatırlatma</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Ödenmemiş ve gecikmiş faturalar, bekleyen gelir ve faturası kesilmemiş işler. Liste tüm deftere bakar, seçili aya kilitli değildir.
+            Ödenmemiş ve gecikmiş faturalar, bekleyen gelir ve faturası kesilmemiş işler. Gecikme fatura tarihine bakar, iş bitişine değil. Liste tüm deftere bakar.
           </p>
         </div>
         <div className="grid gap-3 lg:grid-cols-2">
@@ -142,7 +142,7 @@ export function Overview({
             rows={unpaidInvoices.map((row) => ({
               id: row.id,
               title: row.customerType === "sirket" ? row.unvan || row.number : row.adSoyad || row.number,
-              meta: `${row.number} · ${formatDate(row.date)} · ${PAYMENT_LABEL[row.paymentStatus]}${row.date < today ? " · Gecikti" : ""}${row.sample ? " · Örnek" : ""}`,
+              meta: `${row.number} · Fatura tarihi ${formatDate(row.date)} · ${PAYMENT_LABEL[row.paymentStatus]}${row.date < today ? " · Gecikti" : ""}${row.sample ? " · Örnek" : ""}`,
               amount: formatTry(invoiceGross(row)),
             }))}
           />
@@ -154,7 +154,7 @@ export function Overview({
             rows={overdueInvoices.map((row) => ({
               id: row.id,
               title: row.customerType === "sirket" ? row.unvan || row.number : row.adSoyad || row.number,
-              meta: `${row.number} · ${formatDate(row.date)} · ${PAYMENT_LABEL[row.paymentStatus]}${row.sample ? " · Örnek" : ""}`,
+              meta: `${row.number} · Fatura tarihi ${formatDate(row.date)} · ${PAYMENT_LABEL[row.paymentStatus]}${row.sample ? " · Örnek" : ""}`,
               amount: formatTry(invoiceGross(row)),
             }))}
           />

@@ -54,11 +54,14 @@ export type InvoiceLine = {
 export type Invoice = {
   id: string;
   number: string;
+  /** Fatura tarihi. Overdue and period filters use this, not the job dates. */
   date: string;
+  /** İş başlangıç. Inclusive. */
+  jobStart: string;
+  /** İş bitiş. Inclusive; may equal jobStart. */
+  jobEnd: string;
   customerType: CustomerType;
   unvan: string;
-  vergiDairesi: string;
-  vkn: string;
   adSoyad: string;
   tckn: string;
   address: string;
@@ -74,8 +77,6 @@ export type CompanyProfile = {
   address: string;
   city: string;
   unvan: string;
-  vergiDairesi: string;
-  vkn: string;
 };
 
 export type QuoteRequest = {

@@ -2,7 +2,7 @@
 
 Sahibinin telefonundan kullandığı defter. Gelir, gider, mazot, aylık ve yıllık grafikler, ödenmemiş iş hatırlatması ve şirket ya da şahıs için hazırlanmış fatura PDF’i.
 
-Ana sayfa uygulamadır. Sahip Bedir Berk Kuşçu, telefon 0553 108 48 54. Bu ikisi uygulama çubuğunda ve fatura PDF’inde durur. Adres, vergi dairesi ve VKN firma kartına yazılmadan belgede görünmez.
+Ana sayfa uygulamadır. Sahip Bedir Berk Kuşçu, telefon 0553 108 48 54. Bu ikisi uygulama çubuğunda ve fatura PDF’inde durur. Ünvan, adres ve e-posta firma kartına yazılmadan belgede görünmez. Faturada iş tarihi ile fatura tarihi ayrıdır. Gecikme fatura tarihine bakar.
 
 İndirilen fatura hazırlanmış bir PDF’tir. GİB e-Fatura değildir.
 

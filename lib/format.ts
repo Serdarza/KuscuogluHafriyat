@@ -36,6 +36,35 @@ export function formatDate(iso: string) {
   return `${day}.${month}.${year}`;
 }
 
+function spokenParts(iso: string) {
+  const [year, month, day] = iso.split("-");
+  const monthIndex = Number(month) - 1;
+  const dayNumber = Number(day);
+  if (!year || monthIndex < 0 || monthIndex > 11 || !dayNumber) return null;
+  return { year, monthIndex, day: dayNumber };
+}
+
+export function formatSpokenDate(iso: string) {
+  const date = spokenParts(iso);
+  if (!date) return iso;
+  return `${date.day} ${MONTHS_LONG[date.monthIndex]} ${date.year}`;
+}
+
+/** Single day, or a range such as “3–5 Ekim 2026”. */
+export function formatJobRange(start: string, end: string) {
+  const from = spokenParts(start);
+  const to = spokenParts(end || start);
+  if (!from) return start;
+  if (!to || start === end) return formatSpokenDate(start);
+  if (from.year === to.year && from.monthIndex === to.monthIndex) {
+    return `${from.day}–${to.day} ${MONTHS_LONG[from.monthIndex]} ${from.year}`;
+  }
+  if (from.year === to.year) {
+    return `${from.day} ${MONTHS_LONG[from.monthIndex]}–${to.day} ${MONTHS_LONG[to.monthIndex]} ${from.year}`;
+  }
+  return `${formatSpokenDate(start)}–${formatSpokenDate(end)}`;
+}
+
 export function formatDateTime(iso: string) {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return iso;

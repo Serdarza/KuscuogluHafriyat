@@ -1,65 +1,1144 @@
 {
   "version": 1,
   "company": {
-    "phone": "05531084854",
+    "phone": "",
     "email": "",
     "address": "",
-    "city": "Düzce/ Merkez",
-    "unvan": "Kuşçuoğlu Hafriyat"
+    "city": "",
+    "unvan": ""
   },
   "ledger": {
     "incomes": [
       {
-        "id": "34539ea3-8868-4bb4-9692-6f7e80b92799",
-        "invoiceId": "38f98a5b-699a-4030-a1f3-dfeee8751d51",
-        "date": "2026-10-06",
+        "id": "ornek-gelir-2025-01",
+        "date": "2025-01-11",
         "customerType": "sirket",
-        "name": "MUHAMMED",
-        "jobType": "MUHAMMED",
-        "amount": 30000,
-        "vatRate": 0,
+        "name": "Örnek — Parsel Kazı Ltd.",
+        "jobType": "Temel kazısı",
+        "amount": 72000,
+        "vatRate": 20,
         "paymentStatus": "beklemede",
-        "sample": false
+        "sample": true
       },
       {
-        "id": "8834610f-24de-4f60-a3a2-c90de4b5fabd",
-        "date": "2026-10-06",
+        "id": "ornek-gelir-2025-01-b",
+        "date": "2025-01-19",
         "customerType": "sirket",
-        "name": "SERDAR LTD",
-        "jobType": "EV TEMELİ KAZILDI.",
-        "amount": 31500,
-        "vatRate": 0,
+        "name": "Örnek — Dere Dolgu",
+        "jobType": "Dolgu",
+        "amount": 27360,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2025-02",
+        "date": "2025-02-11",
+        "customerType": "sahis",
+        "name": "Örnek şahıs — Yılmaz",
+        "jobType": "Kanal kazısı",
+        "amount": 86000,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2025-03",
+        "date": "2025-03-11",
+        "customerType": "sirket",
+        "name": "Örnek — Dere Dolgu",
+        "jobType": "Dolgu",
+        "amount": 100000,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2025-03-b",
+        "date": "2025-03-19",
+        "customerType": "sahis",
+        "name": "Örnek şahıs — Kaya",
+        "jobType": "Saha düzenleme",
+        "amount": 38000,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2025-04",
+        "date": "2025-04-11",
+        "customerType": "sirket",
+        "name": "Örnek — Tepe Yıkım",
+        "jobType": "Yıkım",
+        "amount": 114000,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2025-05",
+        "date": "2025-05-11",
+        "customerType": "sahis",
+        "name": "Örnek şahıs — Kaya",
+        "jobType": "Saha düzenleme",
+        "amount": 128000,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2025-05-b",
+        "date": "2025-05-19",
+        "customerType": "sirket",
+        "name": "Örnek — Parsel Kazı Ltd.",
+        "jobType": "Temel kazısı",
+        "amount": 48640,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2025-06",
+        "date": "2025-06-11",
+        "customerType": "sirket",
+        "name": "Örnek — Hat İnşaat",
+        "jobType": "Moloz nakliyesi",
+        "amount": 142000,
+        "vatRate": 20,
+        "paymentStatus": "kismi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2025-07",
+        "date": "2025-07-11",
+        "customerType": "sirket",
+        "name": "Örnek — Parsel Kazı Ltd.",
+        "jobType": "Temel kazısı",
+        "amount": 156000,
+        "vatRate": 20,
         "paymentStatus": "beklemede",
-        "invoiceId": "50020a36-f655-4211-ac28-8f69e0c5975c",
-        "sample": false
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2025-07-b",
+        "date": "2025-07-19",
+        "customerType": "sirket",
+        "name": "Örnek — Dere Dolgu",
+        "jobType": "Dolgu",
+        "amount": 59280,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2025-08",
+        "date": "2025-08-11",
+        "customerType": "sahis",
+        "name": "Örnek şahıs — Yılmaz",
+        "jobType": "Kanal kazısı",
+        "amount": 72000,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2025-09",
+        "date": "2025-09-11",
+        "customerType": "sirket",
+        "name": "Örnek — Dere Dolgu",
+        "jobType": "Dolgu",
+        "amount": 86000,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2025-09-b",
+        "date": "2025-09-19",
+        "customerType": "sahis",
+        "name": "Örnek şahıs — Kaya",
+        "jobType": "Saha düzenleme",
+        "amount": 32680,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2025-10",
+        "date": "2025-10-11",
+        "customerType": "sirket",
+        "name": "Örnek — Tepe Yıkım",
+        "jobType": "Yıkım",
+        "amount": 100000,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2025-11",
+        "date": "2025-11-11",
+        "customerType": "sahis",
+        "name": "Örnek şahıs — Kaya",
+        "jobType": "Saha düzenleme",
+        "amount": 114000,
+        "vatRate": 20,
+        "paymentStatus": "kismi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2025-11-b",
+        "date": "2025-11-19",
+        "customerType": "sirket",
+        "name": "Örnek — Parsel Kazı Ltd.",
+        "jobType": "Temel kazısı",
+        "amount": 43320,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2025-12",
+        "date": "2025-12-11",
+        "customerType": "sirket",
+        "name": "Örnek — Hat İnşaat",
+        "jobType": "Moloz nakliyesi",
+        "amount": 128000,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2026-01",
+        "date": "2026-01-11",
+        "customerType": "sirket",
+        "name": "Örnek — Parsel Kazı Ltd.",
+        "jobType": "Temel kazısı",
+        "amount": 142000,
+        "vatRate": 20,
+        "paymentStatus": "beklemede",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2026-01-b",
+        "date": "2026-01-19",
+        "customerType": "sirket",
+        "name": "Örnek — Dere Dolgu",
+        "jobType": "Dolgu",
+        "amount": 53960,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2026-02",
+        "date": "2026-02-11",
+        "customerType": "sahis",
+        "name": "Örnek şahıs — Yılmaz",
+        "jobType": "Kanal kazısı",
+        "amount": 156000,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2026-03",
+        "date": "2026-03-11",
+        "customerType": "sirket",
+        "name": "Örnek — Dere Dolgu",
+        "jobType": "Dolgu",
+        "amount": 72000,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2026-03-b",
+        "date": "2026-03-19",
+        "customerType": "sahis",
+        "name": "Örnek şahıs — Kaya",
+        "jobType": "Saha düzenleme",
+        "amount": 27360,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2026-04",
+        "date": "2026-04-11",
+        "customerType": "sirket",
+        "name": "Örnek — Tepe Yıkım",
+        "jobType": "Yıkım",
+        "amount": 86000,
+        "vatRate": 20,
+        "paymentStatus": "kismi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2026-05",
+        "date": "2026-05-11",
+        "customerType": "sahis",
+        "name": "Örnek şahıs — Kaya",
+        "jobType": "Saha düzenleme",
+        "amount": 100000,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2026-05-b",
+        "date": "2026-05-19",
+        "customerType": "sirket",
+        "name": "Örnek — Parsel Kazı Ltd.",
+        "jobType": "Temel kazısı",
+        "amount": 38000,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2026-06",
+        "date": "2026-06-11",
+        "customerType": "sirket",
+        "name": "Örnek — Hat İnşaat",
+        "jobType": "Moloz nakliyesi",
+        "amount": 114000,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2026-07",
+        "date": "2026-07-11",
+        "customerType": "sirket",
+        "name": "Örnek — Parsel Kazı Ltd.",
+        "jobType": "Temel kazısı",
+        "amount": 128000,
+        "vatRate": 20,
+        "paymentStatus": "beklemede",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2026-07-b",
+        "date": "2026-07-19",
+        "customerType": "sirket",
+        "name": "Örnek — Dere Dolgu",
+        "jobType": "Dolgu",
+        "amount": 48640,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2026-08",
+        "date": "2026-08-11",
+        "customerType": "sahis",
+        "name": "Örnek şahıs — Yılmaz",
+        "jobType": "Kanal kazısı",
+        "amount": 142000,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2026-09",
+        "date": "2026-09-11",
+        "customerType": "sirket",
+        "name": "Örnek — Dere Dolgu",
+        "jobType": "Dolgu",
+        "amount": 156000,
+        "vatRate": 20,
+        "paymentStatus": "kismi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2026-09-b",
+        "date": "2026-09-19",
+        "customerType": "sahis",
+        "name": "Örnek şahıs — Kaya",
+        "jobType": "Saha düzenleme",
+        "amount": 59280,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2026-10",
+        "date": "2026-10-03",
+        "customerType": "sirket",
+        "name": "Örnek — Tepe Yıkım",
+        "jobType": "Yıkım",
+        "amount": 186000,
+        "vatRate": 20,
+        "paymentStatus": "odendi",
+        "sample": true
+      },
+      {
+        "id": "ornek-gelir-2026-10-b",
+        "date": "2026-10-05",
+        "customerType": "sirket",
+        "name": "Örnek — Hat İnşaat",
+        "jobType": "Moloz nakliyesi",
+        "amount": 70680,
+        "vatRate": 20,
+        "paymentStatus": "beklemede",
+        "sample": true
       }
     ],
-    "expenses": [],
-    "fuels": [],
+    "expenses": [
+      {
+        "id": "ornek-gider-mazot-2025-01",
+        "date": "2025-01-08",
+        "category": "mazot",
+        "amount": 9954,
+        "machine": "Paletli ekskavatör",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2025-01",
+        "date": "2025-01-15",
+        "category": "iscilik",
+        "amount": 22000,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-bakim-2025-01",
+        "date": "2025-01-16",
+        "category": "bakim",
+        "amount": 8500,
+        "machine": "Paletli ekskavatör",
+        "note": "Örnek periyodik bakım",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-parca-2025-01",
+        "date": "2025-01-21",
+        "category": "yedek-parca",
+        "amount": 6400,
+        "machine": "Paletli ekskavatör",
+        "note": "Örnek diş ve pim",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2025-02",
+        "date": "2025-02-08",
+        "category": "mazot",
+        "amount": 11388.3,
+        "machine": "Lastikli kepçe",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2025-02",
+        "date": "2025-02-15",
+        "category": "iscilik",
+        "amount": 24500,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2025-03",
+        "date": "2025-03-08",
+        "category": "mazot",
+        "amount": 12847.8,
+        "machine": "Loder",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2025-03",
+        "date": "2025-03-15",
+        "category": "iscilik",
+        "amount": 27000,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2025-04",
+        "date": "2025-04-08",
+        "category": "mazot",
+        "amount": 14332.5,
+        "machine": "Kamyon",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2025-04",
+        "date": "2025-04-15",
+        "category": "iscilik",
+        "amount": 29500,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-bakim-2025-04",
+        "date": "2025-04-16",
+        "category": "bakim",
+        "amount": 8500,
+        "machine": "Kamyon",
+        "note": "Örnek periyodik bakım",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2025-05",
+        "date": "2025-05-08",
+        "category": "mazot",
+        "amount": 15842.4,
+        "machine": "Paletli ekskavatör",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2025-05",
+        "date": "2025-05-15",
+        "category": "iscilik",
+        "amount": 22000,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-parca-2025-05",
+        "date": "2025-05-21",
+        "category": "yedek-parca",
+        "amount": 6400,
+        "machine": "Paletli ekskavatör",
+        "note": "Örnek diş ve pim",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2025-06",
+        "date": "2025-06-08",
+        "category": "mazot",
+        "amount": 16590,
+        "machine": "Lastikli kepçe",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2025-06",
+        "date": "2025-06-15",
+        "category": "iscilik",
+        "amount": 24500,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2025-07",
+        "date": "2025-07-08",
+        "category": "mazot",
+        "amount": 10048.5,
+        "machine": "Loder",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2025-07",
+        "date": "2025-07-15",
+        "category": "iscilik",
+        "amount": 27000,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-bakim-2025-07",
+        "date": "2025-07-16",
+        "category": "bakim",
+        "amount": 8500,
+        "machine": "Loder",
+        "note": "Örnek periyodik bakım",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2025-08",
+        "date": "2025-08-08",
+        "category": "mazot",
+        "amount": 11495.4,
+        "machine": "Kamyon",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2025-08",
+        "date": "2025-08-15",
+        "category": "iscilik",
+        "amount": 29500,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2025-09",
+        "date": "2025-09-08",
+        "category": "mazot",
+        "amount": 12967.5,
+        "machine": "Paletli ekskavatör",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2025-09",
+        "date": "2025-09-15",
+        "category": "iscilik",
+        "amount": 22000,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-parca-2025-09",
+        "date": "2025-09-21",
+        "category": "yedek-parca",
+        "amount": 6400,
+        "machine": "Paletli ekskavatör",
+        "note": "Örnek diş ve pim",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2025-10",
+        "date": "2025-10-08",
+        "category": "mazot",
+        "amount": 14464.8,
+        "machine": "Lastikli kepçe",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2025-10",
+        "date": "2025-10-15",
+        "category": "iscilik",
+        "amount": 24500,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-bakim-2025-10",
+        "date": "2025-10-16",
+        "category": "bakim",
+        "amount": 8500,
+        "machine": "Lastikli kepçe",
+        "note": "Örnek periyodik bakım",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2025-11",
+        "date": "2025-11-08",
+        "category": "mazot",
+        "amount": 15262.8,
+        "machine": "Loder",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2025-11",
+        "date": "2025-11-15",
+        "category": "iscilik",
+        "amount": 27000,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2025-12",
+        "date": "2025-12-08",
+        "category": "mazot",
+        "amount": 16747.5,
+        "machine": "Kamyon",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2025-12",
+        "date": "2025-12-15",
+        "category": "iscilik",
+        "amount": 29500,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2026-01",
+        "date": "2026-01-08",
+        "category": "mazot",
+        "amount": 10143,
+        "machine": "Paletli ekskavatör",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2026-01",
+        "date": "2026-01-15",
+        "category": "iscilik",
+        "amount": 22000,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-bakim-2026-01",
+        "date": "2026-01-16",
+        "category": "bakim",
+        "amount": 8500,
+        "machine": "Paletli ekskavatör",
+        "note": "Örnek periyodik bakım",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-parca-2026-01",
+        "date": "2026-01-21",
+        "category": "yedek-parca",
+        "amount": 6400,
+        "machine": "Paletli ekskavatör",
+        "note": "Örnek diş ve pim",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2026-02",
+        "date": "2026-02-08",
+        "category": "mazot",
+        "amount": 11602.5,
+        "machine": "Lastikli kepçe",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2026-02",
+        "date": "2026-02-15",
+        "category": "iscilik",
+        "amount": 24500,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2026-03",
+        "date": "2026-03-08",
+        "category": "mazot",
+        "amount": 13087.2,
+        "machine": "Loder",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2026-03",
+        "date": "2026-03-15",
+        "category": "iscilik",
+        "amount": 27000,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2026-04",
+        "date": "2026-04-08",
+        "category": "mazot",
+        "amount": 13935.6,
+        "machine": "Kamyon",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2026-04",
+        "date": "2026-04-15",
+        "category": "iscilik",
+        "amount": 29500,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-bakim-2026-04",
+        "date": "2026-04-16",
+        "category": "bakim",
+        "amount": 8500,
+        "machine": "Kamyon",
+        "note": "Örnek periyodik bakım",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2026-05",
+        "date": "2026-05-08",
+        "category": "mazot",
+        "amount": 15407.7,
+        "machine": "Paletli ekskavatör",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2026-05",
+        "date": "2026-05-15",
+        "category": "iscilik",
+        "amount": 22000,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-parca-2026-05",
+        "date": "2026-05-21",
+        "category": "yedek-parca",
+        "amount": 6400,
+        "machine": "Paletli ekskavatör",
+        "note": "Örnek diş ve pim",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2026-06",
+        "date": "2026-06-08",
+        "category": "mazot",
+        "amount": 16905,
+        "machine": "Lastikli kepçe",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2026-06",
+        "date": "2026-06-15",
+        "category": "iscilik",
+        "amount": 24500,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2026-07",
+        "date": "2026-07-08",
+        "category": "mazot",
+        "amount": 10237.5,
+        "machine": "Loder",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2026-07",
+        "date": "2026-07-15",
+        "category": "iscilik",
+        "amount": 27000,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-bakim-2026-07",
+        "date": "2026-07-16",
+        "category": "bakim",
+        "amount": 8500,
+        "machine": "Loder",
+        "note": "Örnek periyodik bakım",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2026-08",
+        "date": "2026-08-08",
+        "category": "mazot",
+        "amount": 11709.6,
+        "machine": "Kamyon",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2026-08",
+        "date": "2026-08-15",
+        "category": "iscilik",
+        "amount": 29500,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2026-09",
+        "date": "2026-09-08",
+        "category": "mazot",
+        "amount": 12608.4,
+        "machine": "Paletli ekskavatör",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2026-09",
+        "date": "2026-09-15",
+        "category": "iscilik",
+        "amount": 22000,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-parca-2026-09",
+        "date": "2026-09-21",
+        "category": "yedek-parca",
+        "amount": 6400,
+        "machine": "Paletli ekskavatör",
+        "note": "Örnek diş ve pim",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-mazot-2026-10",
+        "date": "2026-10-02",
+        "category": "mazot",
+        "amount": 14067.9,
+        "machine": "Lastikli kepçe",
+        "note": "Örnek — aynı ayın litre kaydı",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-iscilik-2026-10",
+        "date": "2026-10-04",
+        "category": "iscilik",
+        "amount": 24500,
+        "machine": "Saha ekibi",
+        "note": "Örnek yevmiye",
+        "sample": true
+      },
+      {
+        "id": "ornek-gider-bakim-2026-10",
+        "date": "2026-10-06",
+        "category": "bakim",
+        "amount": 8500,
+        "machine": "Lastikli kepçe",
+        "note": "Örnek periyodik bakım",
+        "sample": true
+      }
+    ],
+    "fuels": [
+      {
+        "id": "ornek-mazot-2025-01",
+        "date": "2025-01-08",
+        "litres": 210,
+        "pricePerLitre": 47.4,
+        "machine": "Paletli ekskavatör",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2025-02",
+        "date": "2025-02-08",
+        "litres": 238,
+        "pricePerLitre": 47.85,
+        "machine": "Lastikli kepçe",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2025-03",
+        "date": "2025-03-08",
+        "litres": 266,
+        "pricePerLitre": 48.3,
+        "machine": "Loder",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2025-04",
+        "date": "2025-04-08",
+        "litres": 294,
+        "pricePerLitre": 48.75,
+        "machine": "Kamyon",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2025-05",
+        "date": "2025-05-08",
+        "litres": 322,
+        "pricePerLitre": 49.2,
+        "machine": "Paletli ekskavatör",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2025-06",
+        "date": "2025-06-08",
+        "litres": 350,
+        "pricePerLitre": 47.4,
+        "machine": "Lastikli kepçe",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2025-07",
+        "date": "2025-07-08",
+        "litres": 210,
+        "pricePerLitre": 47.85,
+        "machine": "Loder",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2025-08",
+        "date": "2025-08-08",
+        "litres": 238,
+        "pricePerLitre": 48.3,
+        "machine": "Kamyon",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2025-09",
+        "date": "2025-09-08",
+        "litres": 266,
+        "pricePerLitre": 48.75,
+        "machine": "Paletli ekskavatör",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2025-10",
+        "date": "2025-10-08",
+        "litres": 294,
+        "pricePerLitre": 49.2,
+        "machine": "Lastikli kepçe",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2025-11",
+        "date": "2025-11-08",
+        "litres": 322,
+        "pricePerLitre": 47.4,
+        "machine": "Loder",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2025-12",
+        "date": "2025-12-08",
+        "litres": 350,
+        "pricePerLitre": 47.85,
+        "machine": "Kamyon",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2026-01",
+        "date": "2026-01-08",
+        "litres": 210,
+        "pricePerLitre": 48.3,
+        "machine": "Paletli ekskavatör",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2026-02",
+        "date": "2026-02-08",
+        "litres": 238,
+        "pricePerLitre": 48.75,
+        "machine": "Lastikli kepçe",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2026-03",
+        "date": "2026-03-08",
+        "litres": 266,
+        "pricePerLitre": 49.2,
+        "machine": "Loder",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2026-04",
+        "date": "2026-04-08",
+        "litres": 294,
+        "pricePerLitre": 47.4,
+        "machine": "Kamyon",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2026-05",
+        "date": "2026-05-08",
+        "litres": 322,
+        "pricePerLitre": 47.85,
+        "machine": "Paletli ekskavatör",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2026-06",
+        "date": "2026-06-08",
+        "litres": 350,
+        "pricePerLitre": 48.3,
+        "machine": "Lastikli kepçe",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2026-07",
+        "date": "2026-07-08",
+        "litres": 210,
+        "pricePerLitre": 48.75,
+        "machine": "Loder",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2026-08",
+        "date": "2026-08-08",
+        "litres": 238,
+        "pricePerLitre": 49.2,
+        "machine": "Kamyon",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2026-09",
+        "date": "2026-09-08",
+        "litres": 266,
+        "pricePerLitre": 47.4,
+        "machine": "Paletli ekskavatör",
+        "station": "Örnek istasyon",
+        "sample": true
+      },
+      {
+        "id": "ornek-mazot-2026-10",
+        "date": "2026-10-02",
+        "litres": 294,
+        "pricePerLitre": 47.85,
+        "machine": "Lastikli kepçe",
+        "station": "Örnek istasyon",
+        "sample": true
+      }
+    ],
     "invoices": [
       {
-        "id": "38f98a5b-699a-4030-a1f3-dfeee8751d51",
-        "number": "KH-2026-10-06-02",
-        "date": "2026-10-06",
-        "jobStart": "2026-10-06",
-        "jobEnd": "2026-10-06",
+        "id": "ornek-fatura-1",
+        "number": "KH-2026-10-03-01",
+        "date": "2026-10-03",
+        "jobStart": "2026-10-01",
+        "jobEnd": "2026-10-03",
         "customerType": "sirket",
-        "unvan": "MUHAMMED",
+        "unvan": "Örnek — Parsel Kazı Ltd.",
         "adSoyad": "",
         "tckn": "",
-        "address": "MUHAMMED",
+        "address": "Örnek saha — adres yazılmadı",
         "lines": [
           {
-            "id": "a7c66154-365c-4cb4-b843-034647148152",
-            "description": "MUHAMMED",
-            "quantity": 10,
-            "unit": "saat",
-            "unitPrice": 3000
+            "id": "ornek-kalem-1",
+            "description": "Temel kazısı",
+            "quantity": 420,
+            "unit": "m³",
+            "unitPrice": 280
+          },
+          {
+            "id": "ornek-kalem-2",
+            "description": "Moloz nakliyesi",
+            "quantity": 6,
+            "unit": "sefer",
+            "unitPrice": 4500
           }
         ],
-        "vatRate": 0,
+        "vatRate": 20,
         "paymentStatus": "beklemede",
-        "sample": false
+        "sample": true
       }
     ]
   }

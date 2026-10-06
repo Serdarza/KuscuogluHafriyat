@@ -10,6 +10,18 @@
   "ledger": {
     "incomes": [
       {
+        "id": "34539ea3-8868-4bb4-9692-6f7e80b92799",
+        "invoiceId": "38f98a5b-699a-4030-a1f3-dfeee8751d51",
+        "date": "2026-10-06",
+        "customerType": "sirket",
+        "name": "MUHAMMED",
+        "jobType": "MUHAMMED",
+        "amount": 30000,
+        "vatRate": 0,
+        "paymentStatus": "beklemede",
+        "sample": false
+      },
+      {
         "id": "8834610f-24de-4f60-a3a2-c90de4b5fabd",
         "date": "2026-10-06",
         "customerType": "sirket",
@@ -25,6 +37,30 @@
     "expenses": [],
     "fuels": [],
     "invoices": [
+      {
+        "id": "38f98a5b-699a-4030-a1f3-dfeee8751d51",
+        "number": "KH-2026-10-06-02",
+        "date": "2026-10-06",
+        "jobStart": "2026-10-06",
+        "jobEnd": "2026-10-06",
+        "customerType": "sirket",
+        "unvan": "MUHAMMED",
+        "adSoyad": "",
+        "tckn": "",
+        "address": "MUHAMMED",
+        "lines": [
+          {
+            "id": "a7c66154-365c-4cb4-b843-034647148152",
+            "description": "MUHAMMED",
+            "quantity": 10,
+            "unit": "saat",
+            "unitPrice": 3000
+          }
+        ],
+        "vatRate": 0,
+        "paymentStatus": "beklemede",
+        "sample": false
+      },
       {
         "id": "0f34aca0-6acf-4368-933b-ae26eb98d5b0",
         "number": "KH-2026-10-06-01",

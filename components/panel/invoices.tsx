@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { ConfirmDialog, Field, FieldSelect, TextField } from "@/components/panel/fields";
 import { useLedger } from "@/components/panel/ledger-context";
 import {
@@ -230,80 +231,82 @@ export function InvoiceDesk({ filter }: { filter: PeriodFilter }) {
                 onChange={(vatRate) => setEditing({ ...editing, vatRate: Number(vatRate) })}
                 options={VAT_RATES.map((rate) => ({ value: String(rate), label: `%${rate}` }))}
               />
-              <div className="grid gap-2">
+              <div className="grid gap-3">
                 <p className="text-sm font-medium">Kalemler</p>
-                {editing.lines.map((line) => (
-                  <div key={line.id} className="grid gap-2 rounded-lg bg-muted/60 p-2 sm:grid-cols-12">
-                    <Input
-                      className="h-10 sm:col-span-5"
-                      value={line.description}
-                      placeholder="Açıklama"
-                      onChange={(event) =>
-                        setEditing({
-                          ...editing,
-                          lines: editing.lines.map((item) =>
-                            item.id === line.id ? { ...item, description: event.target.value } : item,
-                          ),
-                        })
-                      }
-                    />
-                    <Input
-                      className="h-10 sm:col-span-2"
-                      type="number"
-                      value={String(line.quantity)}
-                      onChange={(event) =>
-                        setEditing({
-                          ...editing,
-                          lines: editing.lines.map((item) =>
-                            item.id === line.id ? { ...item, quantity: Number(event.target.value) } : item,
-                          ),
-                        })
-                      }
-                    />
-                    <div className="sm:col-span-2">
+                {editing.lines.map((line) => {
+                  const patch = (next: Partial<typeof line>) =>
+                    setEditing({
+                      ...editing,
+                      lines: editing.lines.map((item) => (item.id === line.id ? { ...item, ...next } : item)),
+                    });
+                  return (
+                    <div key={line.id} className="grid gap-3 rounded-lg bg-muted/60 p-3 sm:grid-cols-2 lg:grid-cols-6">
+                      <div className="grid gap-1.5 sm:col-span-2 lg:col-span-2">
+                        <Label htmlFor={`kalem-aciklama-${line.id}`}>Açıklama</Label>
+                        <Input
+                          id={`kalem-aciklama-${line.id}`}
+                          className="h-10"
+                          value={line.description}
+                          onChange={(event) => patch({ description: event.target.value })}
+                        />
+                      </div>
+                      <div className="grid gap-1.5">
+                        <Label htmlFor={`kalem-miktar-${line.id}`}>Miktar</Label>
+                        <Input
+                          id={`kalem-miktar-${line.id}`}
+                          className="h-10"
+                          type="number"
+                          inputMode="decimal"
+                          value={String(line.quantity)}
+                          onChange={(event) => patch({ quantity: Number(event.target.value) })}
+                        />
+                      </div>
                       <FieldSelect
                         label="Birim"
                         value={line.unit}
-                        onChange={(unit) =>
-                          setEditing({
-                            ...editing,
-                            lines: editing.lines.map((item) => (item.id === line.id ? { ...item, unit } : item)),
-                          })
-                        }
+                        onChange={(unit) => patch({ unit })}
                         options={(UNITS.includes(line.unit) ? UNITS : [line.unit, ...UNITS]).map((unit) => ({
                           value: unit,
                           label: unit,
                         }))}
                       />
+                      <div className="grid gap-1.5">
+                        <Label htmlFor={`kalem-fiyat-${line.id}`}>Birim fiyat (₺)</Label>
+                        <Input
+                          id={`kalem-fiyat-${line.id}`}
+                          className="h-10"
+                          type="number"
+                          inputMode="decimal"
+                          value={String(line.unitPrice)}
+                          onChange={(event) => patch({ unitPrice: Number(event.target.value) })}
+                        />
+                      </div>
+                      <div className="grid gap-1.5">
+                        <p className="text-sm font-medium" id={`kalem-toplam-${line.id}`}>Satır toplam</p>
+                        <p
+                          className="flex h-10 items-center font-semibold"
+                          aria-labelledby={`kalem-toplam-${line.id}`}
+                        >
+                          {formatTry(lineAmount(line))}
+                        </p>
+                      </div>
+                      <div className="flex items-end sm:col-span-2 lg:col-span-6">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          onClick={() =>
+                            setEditing({
+                              ...editing,
+                              lines: editing.lines.filter((item) => item.id !== line.id),
+                            })
+                          }
+                        >
+                          Satırı sil
+                        </Button>
+                      </div>
                     </div>
-                    <Input
-                      className="h-10 sm:col-span-2"
-                      type="number"
-                      value={String(line.unitPrice)}
-                      onChange={(event) =>
-                        setEditing({
-                          ...editing,
-                          lines: editing.lines.map((item) =>
-                            item.id === line.id ? { ...item, unitPrice: Number(event.target.value) } : item,
-                          ),
-                        })
-                      }
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      className="sm:col-span-1"
-                      onClick={() =>
-                        setEditing({
-                          ...editing,
-                          lines: editing.lines.filter((item) => item.id !== line.id),
-                        })
-                      }
-                    >
-                      Sil
-                    </Button>
-                  </div>
-                ))}
+                  );
+                })}
                 <Button type="button" variant="outline" onClick={() => setEditing({ ...editing, lines: [...editing.lines, emptyLine()] })}>
                   Kalem ekle
                 </Button>
